@@ -4,6 +4,8 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using EditorBridge.Editor.Models;
+using UnityEngine;
 
 namespace EditorBridge.Editor.Server
 {
@@ -64,18 +66,18 @@ namespace EditorBridge.Editor.Server
                 else if (_knownPaths.Contains(path))
                 {
                     // The path is registered but not for this HTTP method.
-                    WriteResponse(context, 405, JsonHelper.Error("Method not allowed"));
+                    WriteResponse(context, 405, JsonUtility.ToJson(new ErrorResponse { error = "Method not allowed" }));
                 }
                 else
                 {
                     // No handler registered for this path at all.
-                    WriteResponse(context, 404, JsonHelper.Error("Not found"));
+                    WriteResponse(context, 404, JsonUtility.ToJson(new ErrorResponse { error = "Not found" }));
                 }
             }
             catch (Exception ex)
             {
-                UnityEngine.Debug.LogError($"[EditorBridge] {method} {path} failed: {ex}");
-                WriteResponse(context, 500, JsonHelper.Error("Internal server error"));
+                Debug.LogError($"[EditorBridge] {method} {path} failed: {ex}");
+                WriteResponse(context, 500, JsonUtility.ToJson(new ErrorResponse { error = "Internal server error" }));
             }
         }
 

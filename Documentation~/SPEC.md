@@ -33,8 +33,10 @@ UnityEditorBridge/
 │   ├── Server/
 │   │   ├── EditorBridgeServer.cs       ← HttpListener HTTP サーバー
 │   │   ├── RequestRouter.cs            ← パスルーティング
-│   │   ├── MainThreadDispatcher.cs     ← メインスレッドディスパッチ
-│   │   └── JsonHelper.cs              ← JSON ヘルパー
+│   │   └── MainThreadDispatcher.cs     ← メインスレッドディスパッチ
+│   ├── Models/
+│   │   ├── PingResponse.cs             ← GET /ping レスポンス DTO
+│   │   └── ErrorResponse.cs            ← エラーレスポンス DTO
 │   ├── Handlers/
 │   │   ├── PingHandler.cs
 │   │   ├── EditorHandlers.cs
@@ -87,6 +89,19 @@ Unity API はメインスレッドからのみ呼び出し可能。HttpListener 
 2. `TaskCompletionSource<T>` を作成し `ConcurrentQueue` にエンキュー
 3. メインスレッド（`EditorApplication.update`）でデキュー → `func()` 実行 → `tcs.SetResult()`
 4. HTTP スレッドで await 完了 → レスポンスを返す
+
+---
+
+### JSON シリアライズ
+
+リクエスト/レスポンスの JSON シリアライズには DTO クラスを使用する。
+
+- `Editor/Models/` に配置。namespace: `EditorBridge.Models`
+- `[Serializable]` 属性 + public fields（camelCase）
+- Unity 依存（`using UnityEngine` 等）を含めないこと（CLI と共有するため）
+- Unity 側: `JsonUtility.ToJson()` / `JsonUtility.FromJson<T>()`
+- CLI 側: `System.Text.Json` + `JsonSerializerOptions { IncludeFields = true }`
+- CLI の .csproj で `<Compile Include="../../Editor/Models/**/*.cs" LinkBase="Models" />` としてソース共有
 
 ---
 

@@ -4,6 +4,7 @@ using System.Threading;
 using UnityEditor;
 using UnityEngine;
 using EditorBridge.Editor.Handlers;
+using EditorBridge.Editor.Models;
 using EditorBridge.Editor.Settings;
 
 namespace EditorBridge.Editor.Server
@@ -242,7 +243,7 @@ namespace EditorBridge.Editor.Server
                     Debug.LogError($"[EditorBridge] Unhandled exception: {ex}");
                     try
                     {
-                        RequestRouter.WriteResponse(context, 500, JsonHelper.Error("Internal server error"));
+                        RequestRouter.WriteResponse(context, 500, JsonUtility.ToJson(new ErrorResponse { error = "Internal server error" }));
                     }
                     catch
                     {

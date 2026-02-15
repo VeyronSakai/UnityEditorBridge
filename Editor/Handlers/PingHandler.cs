@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using EditorBridge.Editor.Models;
 using UnityEngine;
 using EditorBridge.Editor.Server;
 
@@ -32,7 +33,7 @@ namespace EditorBridge.Editor.Handlers
             // Debug.Log is a Unity API that must be called from the main thread.
             await MainThreadDispatcher.RunOnMainThread(() => Debug.Log("pong"));
 
-            var json = JsonHelper.Object(("status", "ok"));
+            var json = JsonUtility.ToJson(new PingResponse { status = "ok" });
             RequestRouter.WriteResponse(context, 200, json);
         }
     }
