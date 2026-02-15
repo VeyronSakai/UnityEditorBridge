@@ -135,7 +135,7 @@
       },
       "url": "https://packages.unity.com"
     },
-    "com.your-company.package-name": {
+    "com.veyron-sakai.editor-bridge": {
       "version": "file:../../",
       "depth": 0,
       "source": "local",

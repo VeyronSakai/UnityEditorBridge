@@ -1,9 +1,9 @@
 {
-  "name": "com.your-company.package-name",
-  "displayName": "Package Name",
+  "name": "com.veyron-sakai.editor-bridge",
+  "displayName": "Editor Bridge",
   "version": "0.1.0",
-  "description": "Description of your Unity package.",
+  "description": "A package that provides a bridge between the Unity Editor and external tools.",
   "author": {
-    "name": "Your Name"
+    "name": "Yuki Sakai"
   }
 }
