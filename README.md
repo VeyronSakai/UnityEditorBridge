@@ -1,55 +1,80 @@
-# Unity Package Template
+# UnityEditorBridge
 
-This is a template repository for creating Unity packages.
+> **Warning**
+> This project is in a very early stage of development. Only a small subset of features has been implemented, and the API and command structure are subject to significant changes without notice.
+
+A toolkit for controlling Unity Editor externally via REST API and CLI.
+
+Primarily designed for AI agents (Claude Code, Codex CLI, etc.) to operate Unity Editor through shell commands.
 
 ## Features
 
-- Standard Unity package structure
-- `.editorconfig` for consistent code styling
-- GitHub workflows for CI/CD (lint, test, release)
-- Unity meta files for all assets
-- Sample folders structure
+- Pure C# — no external runtimes like Python or Node.js required
+- Embeds an HTTP server inside Unity Editor, controlled via REST API
+- .NET 8 CLI tool (`dotnet ueb`) for command-line operation
+- Distributed as a UPM package
 
-## Getting Started
+## Requirements
 
-1. Click "Use this template" to create a new repository
-2. Update `package.json` with your package information:
-   - `name`: Your package name (e.g., `com.yourcompany.packagename`)
-   - `displayName`: Display name shown in Unity Package Manager
-   - `version`: Package version (follow [Semantic Versioning](https://semver.org/))
-   - `description`: Brief description of your package
-   - `author.name`: Your name or organization
-3. Update this README with your package documentation
-4. Add your code to the appropriate folders:
-   - `Runtime/`: Runtime scripts
-   - `Editor/`: Editor-only scripts
-   - `Tests/`: Unit tests
-   - `Samples~/`: Sample scenes and assets (hidden from Unity)
-
-## Package Structure
-
-```
-.
-├── Editor/              # Editor scripts
-├── Runtime/             # Runtime scripts
-├── Tests/               # Tests
-├── Samples~/            # Samples (hidden from Unity)
-├── .editorconfig        # Code style configuration
-├── .gitignore           # Git ignore rules
-├── LICENSE.txt          # License file
-├── README.md            # This file
-└── package.json         # Package manifest
-```
+- Unity 2021.3 or later
+- .NET 8 SDK (for CLI usage)
 
 ## Installation
 
-Install this package via Unity Package Manager:
+Add via Unity Package Manager using a Git URL:
 
-1. Open Package Manager in Unity
-2. Click `+` button
+1. Open Package Manager
+2. Click the `+` button
 3. Select "Add package from git URL"
-4. Enter: `https://github.com/YOUR_USERNAME/YOUR_REPO.git`
+4. Enter the following URL:
+
+```
+https://github.com/VeyronSakai/UnityEditorBridge.git
+```
+
+The CLI is automatically installed as a dotnet local tool when Unity Editor starts.
+
+## Usage
+
+```bash
+# Health check (logs "pong" in Unity Console)
+dotnet ueb editor ping
+
+# Start Play mode
+dotnet ueb editor play
+
+# Stop Play mode
+dotnet ueb editor stop
+
+# Create a GameObject
+dotnet ueb gameobject create --name "Player" --primitive Cube
+```
+
+You can also call the API directly with curl:
+
+```bash
+curl http://localhost:56780/ping
+curl -X POST http://localhost:56780/editor/play
+```
+
+## API Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/ping` | Health check |
+| POST | `/editor/play` | Start Play mode |
+| POST | `/editor/stop` | Stop Play mode |
+| POST | `/gameobject/create` | Create a GameObject |
+
+## Settings
+
+Configurable from Project Settings > Unity Editor Bridge.
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| Port | 56780 | Listen port |
+| AutoStart | true | Start automatically on Editor launch |
 
 ## License
 
-MIT License - see [LICENSE.txt](LICENSE.txt) for details
+MIT License - [LICENSE.txt](LICENSE.txt)
