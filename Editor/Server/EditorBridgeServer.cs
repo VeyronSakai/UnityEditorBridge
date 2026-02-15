@@ -90,14 +90,20 @@ namespace EditorBridge.Editor.Server
 
         static void ListenLoop()
         {
-            while (_listener != null && _listener.IsListening && !_cts.IsCancellationRequested)
+            var cts = _cts;
+            if (cts == null) return;
+
+            var token = cts.Token;
+            var tokenWaitHandle = token.WaitHandle;
+
+            while (_listener != null && _listener.IsListening && !token.IsCancellationRequested)
             {
                 try
                 {
                     var result = _listener.BeginGetContext(ListenerCallback, _listener);
                     using (var handle = result.AsyncWaitHandle)
                     {
-                        WaitHandle.WaitAny(new[] { handle, _cts.Token.WaitHandle });
+                        WaitHandle.WaitAny(new[] { handle, tokenWaitHandle });
                     }
                 }
                 catch (ObjectDisposedException)
