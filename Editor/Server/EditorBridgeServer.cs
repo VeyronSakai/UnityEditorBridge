@@ -50,6 +50,7 @@ namespace EditorBridge.Editor.Server
                 Debug.LogError($"[EditorBridge] Failed to start server on port {port}: {ex.Message}");
                 try { _listener.Close(); } catch { }
                 _listener = null;
+                _router = null;
                 return;
             }
 
@@ -131,9 +132,12 @@ namespace EditorBridge.Editor.Server
                 return;
             }
 
+            var router = _router;
+            if (router == null) return;
+
             try
             {
-                await _router.HandleRequest(context);
+                await router.HandleRequest(context);
             }
             catch (Exception ex)
             {
