@@ -96,7 +96,7 @@ Unity API はメインスレッドからのみ呼び出し可能。HttpListener 
 
 リクエスト/レスポンスの JSON シリアライズには DTO クラスを使用する。
 
-- `Editor/Models/` に配置。namespace: `EditorBridge.Models`
+- `Editor/Models/` に配置。namespace: `EditorBridge.Editor.Models`
 - `[Serializable]` 属性 + public fields（camelCase）
 - Unity 依存（`using UnityEngine` 等）を含めないこと（CLI と共有するため）
 - Unity 側: `JsonUtility.ToJson()` / `JsonUtility.FromJson<T>()`
@@ -116,7 +116,7 @@ Unity API はメインスレッドからのみ呼び出し可能。HttpListener 
 
 レスポンス:
 ```json
-{"status": "ok"}
+{"status": "ok", "message": "pong"}
 ```
 
 ### POST `/editor/play`

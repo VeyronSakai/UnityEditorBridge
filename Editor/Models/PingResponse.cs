@@ -6,5 +6,6 @@ namespace EditorBridge.Editor.Models
     public class PingResponse
     {
         public string status;
+        public string message;
     }
 }

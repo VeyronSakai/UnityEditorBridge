@@ -18,6 +18,6 @@ Unity Editor を外部から REST API + CLI で操作するツールキット。
 - Unity API 呼び出しは必ず MainThreadDispatcher 経由
 - シーン変更操作はすべて Undo 対応
 - JSON シリアライズは DTO クラス + JsonUtility（Unity 側）/ System.Text.Json（CLI 側）
-- DTO は Editor/Models/ に配置、namespace は EditorBridge.Models
+- DTO は Editor/Models/ に配置、namespace は EditorBridge.Editor.Models
 - DTO に Unity 依存（using UnityEngine 等）を入れないこと（CLI と共有するため）
 - CLI の実行は `dotnet ueb`
