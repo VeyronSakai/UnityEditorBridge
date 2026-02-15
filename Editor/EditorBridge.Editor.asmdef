@@ -1,0 +1,7 @@
+{
+    "name": "EditorBridge.Editor",
+    "rootNamespace": "EditorBridge.Editor",
+    "includePlatforms": [
+        "Editor"
+    ]
+}

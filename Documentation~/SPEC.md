@@ -33,8 +33,10 @@ UnityEditorBridge/
 │   ├── Server/
 │   │   ├── EditorBridgeServer.cs       ← HttpListener HTTP サーバー
 │   │   ├── RequestRouter.cs            ← パスルーティング
-│   │   ├── MainThreadDispatcher.cs     ← メインスレッドディスパッチ
-│   │   └── JsonHelper.cs              ← JSON ヘルパー
+│   │   └── MainThreadDispatcher.cs     ← メインスレッドディスパッチ
+│   ├── Models/
+│   │   ├── PingResponse.cs             ← GET /ping レスポンス DTO
+│   │   └── ErrorResponse.cs            ← エラーレスポンス DTO
 │   ├── Handlers/
 │   │   ├── PingHandler.cs
 │   │   ├── EditorHandlers.cs
@@ -90,6 +92,19 @@ Unity API はメインスレッドからのみ呼び出し可能。HttpListener 
 
 ---
 
+### JSON シリアライズ
+
+リクエスト/レスポンスの JSON シリアライズには DTO クラスを使用する。
+
+- `Editor/Models/` に配置。namespace: `EditorBridge.Editor.Models`
+- `[Serializable]` 属性 + public fields（camelCase）
+- Unity 依存（`using UnityEngine` 等）を含めないこと（CLI と共有するため）
+- Unity 側: `JsonUtility.ToJson()` / `JsonUtility.FromJson<T>()`
+- CLI 側: `System.Text.Json` + `JsonSerializerOptions { IncludeFields = true }`
+- CLI の .csproj で `<Compile Include="../../Editor/Models/**/*.cs" LinkBase="Models" />` としてソース共有
+
+---
+
 ## API エンドポイント（v0.1.0 スコープ）
 
 レスポンスは常に `application/json; charset=utf-8`。
@@ -101,7 +116,7 @@ Unity API はメインスレッドからのみ呼び出し可能。HttpListener 
 
 レスポンス:
 ```json
-{"status": "ok"}
+{"status": "ok", "message": "pong"}
 ```
 
 ### POST `/editor/play`
