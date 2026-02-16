@@ -41,11 +41,9 @@ UnityEditorBridge/
 │   │   ├── PingHandler.cs
 │   │   ├── EditorHandlers.cs
 │   │   └── GameObjectHandlers.cs
-│   ├── Settings/
-│   │   ├── EditorBridgeSettings.cs
-│   │   └── EditorBridgeSettingsProvider.cs
-│   └── Installer/
-│       └── CliInstaller.cs
+│   └── Settings/
+│       ├── EditorBridgeSettings.cs
+│       └── EditorBridgeSettingsProvider.cs
 ├── Tools~/
 │   └── UnityEditorBridge.CLI/
 │       ├── UnityEditorBridge.CLI.csproj
@@ -227,31 +225,22 @@ app.Run(args);
 
 ---
 
-## CLI インストーラー（CliInstaller.cs）
+## CLI インストール
 
-Unity Editor 起動時に CLI を dotnet local tool として自動インストールする。
+CLI はユーザーが手動でインストールする。Unity プロジェクトのルートで以下を実行:
 
-### 動作フロー（`[InitializeOnLoad]` で自動実行）
+```bash
+# nupkg をビルド
+dotnet pack Library/PackageCache/com.veyron-sakai.editor-bridge@*/Tools~/UnityEditorBridge.CLI/ \
+  -c Release -o Library/EditorBridge/nupkg
 
-1. プロジェクトルート（`Application.dataPath` の親）を取得
-2. nupkg が未ビルドまたはバージョン不一致の場合:
-   ```
-   dotnet pack "Packages/com.veyron-sakai.editor-bridge/Tools~/UnityEditorBridge.CLI/"
-     -c Release -o "Library/EditorBridge/nupkg"
-   ```
-3. `.config/dotnet-tools.json` がなければ `dotnet new tool-manifest` を実行
-4. 未インストールなら:
-   ```
-   dotnet tool install UnityEditorBridge.CLI --local
-     --add-source "Library/EditorBridge/nupkg"
-   ```
-5. バージョン不一致なら `dotnet tool update` で更新
-6. Console に `[EditorBridge] CLI installed: dotnet ueb` とログ出力
+# tool manifest がなければ作成
+dotnet new tool-manifest
 
-### エラーハンドリング
-
-- `dotnet` が見つからない → 警告ログを出してスキップ（サーバー起動はブロックしない）
-- `dotnet pack` / `dotnet tool install` 失敗 → エラーログを出してスキップ
+# ローカルツールとしてインストール
+dotnet tool install UnityEditorBridge.CLI --local \
+  --add-source Library/EditorBridge/nupkg
+```
 
 ---
 

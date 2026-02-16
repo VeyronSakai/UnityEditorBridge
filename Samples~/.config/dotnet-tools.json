@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "unityeditorbridge.cli": {
+      "version": "0.1.0",
+      "commands": [
+        "ueb"
+      ],
+      "rollForward": false
+    }
+  }
+}
