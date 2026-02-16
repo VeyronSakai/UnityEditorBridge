@@ -243,7 +243,8 @@ namespace EditorBridge.Editor.Server
                     Debug.LogError($"[EditorBridge] Unhandled exception: {ex}");
                     try
                     {
-                        RequestRouter.WriteResponse(context, 500, JsonUtility.ToJson(new ErrorResponse { error = "Internal server error" }));
+                        RequestRouter.WriteResponse(context, 500,
+                            JsonUtility.ToJson(new ErrorResponse("Internal server error")));
                     }
                     catch
                     {

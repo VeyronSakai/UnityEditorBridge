@@ -66,18 +66,18 @@ namespace EditorBridge.Editor.Server
                 else if (_knownPaths.Contains(path))
                 {
                     // The path is registered but not for this HTTP method.
-                    WriteResponse(context, 405, JsonUtility.ToJson(new ErrorResponse { error = "Method not allowed" }));
+                    WriteResponse(context, 405, JsonUtility.ToJson(new ErrorResponse("Method not allowed")));
                 }
                 else
                 {
                     // No handler registered for this path at all.
-                    WriteResponse(context, 404, JsonUtility.ToJson(new ErrorResponse { error = "Not found" }));
+                    WriteResponse(context, 404, JsonUtility.ToJson(new ErrorResponse("Not found")));
                 }
             }
             catch (Exception ex)
             {
                 Debug.LogError($"[EditorBridge] {method} {path} failed: {ex}");
-                WriteResponse(context, 500, JsonUtility.ToJson(new ErrorResponse { error = "Internal server error" }));
+                WriteResponse(context, 500, JsonUtility.ToJson(new ErrorResponse("Internal server error")));
             }
         }
 

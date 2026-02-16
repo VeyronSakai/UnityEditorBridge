@@ -1,5 +1,7 @@
 using System;
 
+#nullable enable
+
 namespace EditorBridge.Editor.Models
 {
     [Serializable]
@@ -7,5 +9,11 @@ namespace EditorBridge.Editor.Models
     {
         public string status;
         public string message;
+
+        public PingResponse(string status, string message)
+        {
+            this.status = status;
+            this.message = message;
+        }
     }
 }
