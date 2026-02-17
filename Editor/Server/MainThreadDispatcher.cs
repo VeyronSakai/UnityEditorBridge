@@ -21,7 +21,7 @@ namespace EditorBridge.Editor.Server
     {
         // A thread-safe queue that holds actions submitted from any thread.
         // Drained on the main thread each editor frame.
-        private static readonly ConcurrentQueue<Action> s_queue = new ConcurrentQueue<Action>();
+        private static readonly ConcurrentQueue<Action> s_queue = new();
 
         /// <summary>
         /// Static constructor — registers the per-frame update callback and ensures

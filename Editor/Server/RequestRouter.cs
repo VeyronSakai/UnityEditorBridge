@@ -20,7 +20,8 @@ namespace EditorBridge.Editor.Server
     {
         // Maps (HTTP method, normalized path) to an async handler function.
         // Example key: (HttpMethodType.Get, "/ping")
-        private readonly Dictionary<(HttpMethodType method, string path), Func<HttpListenerContext, CancellationToken, Task>>
+        private readonly
+            Dictionary<(HttpMethodType method, string path), Func<HttpListenerContext, CancellationToken, Task>>
             _handlers = new();
 
         // Tracks all registered paths regardless of method, so we can distinguish
@@ -34,7 +35,8 @@ namespace EditorBridge.Editor.Server
         /// <param name="method">HTTP method type.</param>
         /// <param name="path">The URL path (e.g. "/ping"). Trailing slashes are stripped.</param>
         /// <param name="handler">An async function that processes the request and writes the response.</param>
-        public void Register(HttpMethodType method, string path, Func<HttpListenerContext, CancellationToken, Task> handler)
+        public void Register(HttpMethodType method, string path,
+            Func<HttpListenerContext, CancellationToken, Task> handler)
         {
             var normalized = NormalizePath(path);
             _handlers[(method, normalized)] = handler;
