@@ -12,7 +12,7 @@ public class PingTool(IHttpClientFactory httpClientFactory)
     private static readonly JsonSerializerOptions s_jsonOptions = new() { IncludeFields = true };
     private readonly HttpClient _httpClient = httpClientFactory.CreateClient("EditorBridge");
 
-    [McpServerTool(ReadOnly = true), Description("Check connectivity with the Unity Editor.")]
+    [McpServerTool(ReadOnly = true), Description("Check connectivity with the Unity Editor."), UsedImplicitly]
     public async Task<string> Ping(CancellationToken cancellationToken)
     {
         var response = await _httpClient.GetAsync(ApiRoutes.Ping, cancellationToken);
