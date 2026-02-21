@@ -9,15 +9,30 @@ namespace UniCortex.Mcp.Tools;
 [McpServerToolType, UsedImplicitly]
 public class PlayTool(IHttpClientFactory httpClientFactory)
 {
-    private readonly HttpClient _httpClient = httpClientFactory.CreateClient("UniCortex");
-
     [McpServerTool(ReadOnly = false), Description("Start Play Mode in the Unity Editor."), UsedImplicitly]
     public async Task<string> Play(CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PostAsync(ApiRoutes.Play, null, cancellationToken);
+        var httpClient = httpClientFactory.CreateClient("UniCortex");
+        var jsonOptions = new JsonSerializerOptions { IncludeFields = true };
+
+        var response = await httpClient.PostAsync(ApiRoutes.Play, null, cancellationToken);
         response.EnsureSuccessStatusCode();
-        var json = await response.Content.ReadAsStringAsync(cancellationToken);
-        var result = JsonSerializer.Deserialize<PlayStopResponse>(json, new JsonSerializerOptions { IncludeFields = true })!;
-        return result.success.ToString();
+
+        while (true)
+        {
+            var statusResponse = await httpClient.GetAsync(ApiRoutes.Status, cancellationToken);
+            statusResponse.EnsureSuccessStatusCode();
+            var statusJson = await statusResponse.Content.ReadAsStringAsync(cancellationToken);
+            if (string.IsNullOrEmpty(statusJson))
+            {
+                continue;
+            }
+
+            var status = JsonSerializer.Deserialize<EditorStatusResponse>(statusJson, jsonOptions)!;
+            if (status.isPlaying)
+            {
+                return true.ToString();
+            }
+        }
     }
 }
