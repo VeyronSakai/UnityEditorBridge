@@ -11,7 +11,7 @@ Primarily designed for AI agents (Claude Code, Codex CLI, etc.) to operate Unity
 
 - Pure C# — no external runtimes like Python or Node.js required
 - Embeds an HTTP server inside Unity Editor, controlled via REST API
-- .NET 8 MCP server (`dotnet ueb`) for AI agent integration via stdio
+- .NET 8 MCP server (run via `dotnet run`) for AI agent integration via stdio
 - Distributed as a UPM package
 
 ## Requirements
