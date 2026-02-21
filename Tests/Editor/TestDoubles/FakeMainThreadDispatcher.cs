@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using EditorBridge.Editor.Domains.Interfaces;
+using UniCortex.Editor.Domains.Interfaces;
 
-namespace EditorBridge.Editor.Tests.TestDoubles
+namespace UniCortex.Editor.Tests.TestDoubles
 {
     // IMPORTANT: All methods must return synchronously completed tasks
     // (Task.CompletedTask / Task.FromResult). Tests call .GetAwaiter().GetResult()

@@ -10,13 +10,13 @@ builder.Logging.AddConsole(options =>
     options.LogToStandardErrorThreshold = LogLevel.Trace;
 });
 
-builder.Services.AddHttpClient("EditorBridge", client =>
+builder.Services.AddHttpClient("UniCortex", client =>
 {
-    var baseUrl = Environment.GetEnvironmentVariable("UEB_URL") ?? "http://localhost:56780";
+    var baseUrl = Environment.GetEnvironmentVariable("UNICORTEX_URL") ?? "http://localhost:56780";
     if (!Uri.TryCreate(baseUrl, UriKind.Absolute, out var baseUri))
     {
         Console.Error.WriteLine(
-            $"Invalid UEB_URL environment variable value: '{baseUrl}'. Please set it to a valid absolute URL (for example, 'http://localhost:56780').");
+            $"Invalid UNICORTEX_URL environment variable value: '{baseUrl}'. Please set it to a valid absolute URL (for example, 'http://localhost:56780').");
         Environment.Exit(1);
         return;
     }

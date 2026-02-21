@@ -2,11 +2,11 @@ using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using EditorBridge.Editor.Domains.Interfaces;
-using EditorBridge.Editor.Domains.Models;
+using UniCortex.Editor.Domains.Interfaces;
+using UniCortex.Editor.Domains.Models;
 using UnityEngine;
 
-namespace EditorBridge.Editor.Infrastructures
+namespace UniCortex.Editor.Infrastructures
 {
     internal sealed class HttpListenerServer : IHttpServer
     {
@@ -36,7 +36,7 @@ namespace EditorBridge.Editor.Infrastructures
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[EditorBridge] Failed to start server on port {_port}: {ex.Message}");
+                Debug.LogError($"[UniCortex] Failed to start server on port {_port}: {ex.Message}");
 
                 try
                 {
@@ -54,7 +54,7 @@ namespace EditorBridge.Editor.Infrastructures
             _cts = new CancellationTokenSource();
             _ = ListenLoopAsync(_cts.Token);
 
-            Debug.Log($"[EditorBridge] Server started on http://localhost:{_port}/");
+            Debug.Log($"[UniCortex] Server started on http://localhost:{_port}/");
         }
 
         public void Stop()
@@ -111,7 +111,7 @@ namespace EditorBridge.Editor.Infrastructures
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"[EditorBridge] Unhandled exception: {ex}");
+                    Debug.LogError($"[UniCortex] Unhandled exception: {ex}");
                     try
                     {
                         await context.WriteResponseAsync(500,
@@ -125,7 +125,7 @@ namespace EditorBridge.Editor.Infrastructures
             }
             catch (Exception e)
             {
-                Debug.LogError($"[EditorBridge] Request handling failed: {e}");
+                Debug.LogError($"[UniCortex] Request handling failed: {e}");
             }
         }
     }

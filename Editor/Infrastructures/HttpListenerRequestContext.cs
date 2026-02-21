@@ -2,9 +2,9 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using EditorBridge.Editor.Domains.Interfaces;
+using UniCortex.Editor.Domains.Interfaces;
 
-namespace EditorBridge.Editor.Infrastructures
+namespace UniCortex.Editor.Infrastructures
 {
     internal sealed class HttpListenerRequestContext : IRequestContext
     {

@@ -1,0 +1,7 @@
+{
+    "name": "UniCortex.Editor",
+    "rootNamespace": "UniCortex.Editor",
+    "includePlatforms": [
+        "Editor"
+    ]
+}

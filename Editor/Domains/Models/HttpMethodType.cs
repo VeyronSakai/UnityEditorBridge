@@ -1,4 +1,4 @@
-namespace EditorBridge.Editor.Domains.Models
+namespace UniCortex.Editor.Domains.Models
 {
     public enum HttpMethodType
     {

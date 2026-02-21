@@ -1,8 +1,8 @@
 {
-    "name": "EditorBridge.Editor.Tests",
-    "rootNamespace": "EditorBridge.Editor.Tests",
+    "name": "UniCortex.Editor.Tests",
+    "rootNamespace": "UniCortex.Editor.Tests",
     "references": [
-        "EditorBridge.Editor",
+        "UniCortex.Editor",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

@@ -1,9 +1,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using EditorBridge.Editor.Domains.Models;
+using UniCortex.Editor.Domains.Models;
 
-namespace EditorBridge.Editor.Domains.Interfaces
+namespace UniCortex.Editor.Domains.Interfaces
 {
     internal interface IRequestRouter
     {

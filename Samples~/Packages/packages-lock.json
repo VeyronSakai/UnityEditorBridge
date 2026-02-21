@@ -135,7 +135,7 @@
       },
       "url": "https://packages.unity.com"
     },
-    "com.veyron-sakai.editor-bridge": {
+    "com.veyron-sakai.uni-cortex": {
       "version": "file:../../",
       "depth": 0,
       "source": "local",

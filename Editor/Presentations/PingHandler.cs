@@ -1,11 +1,11 @@
 using System.Threading;
 using System.Threading.Tasks;
-using EditorBridge.Editor.Domains.Interfaces;
-using EditorBridge.Editor.Domains.Models;
-using EditorBridge.Editor.UseCases;
+using UniCortex.Editor.Domains.Interfaces;
+using UniCortex.Editor.Domains.Models;
+using UniCortex.Editor.UseCases;
 using UnityEngine;
 
-namespace EditorBridge.Editor.Presentations
+namespace UniCortex.Editor.Presentations
 {
     internal sealed class PingHandler
     {

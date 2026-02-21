@@ -1,4 +1,4 @@
-# UnityEditorBridge
+# UniCortex
 
 > **Warning**
 > This project is in a very early stage of development. Only a small subset of features has been implemented, and the API and command structure are subject to significant changes without notice.
@@ -29,7 +29,7 @@ Add via Unity Package Manager using a Git URL:
 4. Enter the following URL:
 
 ```
-https://github.com/VeyronSakai/UnityEditorBridge.git
+https://github.com/VeyronSakai/UniCortex.git
 ```
 
 ### MCP Server Setup
@@ -39,10 +39,10 @@ Add the following to `.mcp.json` in the Unity project root:
 ```json
 {
   "mcpServers": {
-    "unity-editor-bridge": {
+    "uni-cortex": {
       "type": "stdio",
       "command": "dotnet",
-      "args": ["run", "--project", "Library/PackageCache/com.veyron-sakai.editor-bridge@0.1.0/Tools~/UnityEditorBridge.Mcp/"]
+      "args": ["run", "--project", "Library/PackageCache/com.veyron-sakai.uni-cortex@0.1.0/Tools~/UniCortex.Mcp/"]
     }
   }
 }
@@ -68,7 +68,7 @@ curl -X POST http://localhost:56780/editor/play
 
 ## Settings
 
-Configurable from Project Settings > Unity Editor Bridge.
+Configurable from Project Settings > UniCortex.
 
 | Setting | Default | Description |
 |---------|---------|-------------|
@@ -80,7 +80,7 @@ Configurable from Project Settings > Unity Editor Bridge.
 When developing this package locally:
 
 ```bash
-dotnet run --project Tools~/UnityEditorBridge.Mcp/
+dotnet run --project Tools~/UniCortex.Mcp/
 ```
 
 ## License

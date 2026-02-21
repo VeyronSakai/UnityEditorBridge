@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace EditorBridge.Editor.Domains.Interfaces
+namespace UniCortex.Editor.Domains.Interfaces
 {
     internal interface IRequestContext
     {

@@ -2,7 +2,7 @@ using System;
 
 #nullable enable
 
-namespace EditorBridge.Editor.Domains.Models
+namespace UniCortex.Editor.Domains.Models
 {
     [Serializable]
     public class ErrorResponse

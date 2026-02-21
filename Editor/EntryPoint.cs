@@ -1,11 +1,11 @@
-using EditorBridge.Editor.Infrastructures;
-using EditorBridge.Editor.Presentations;
-using EditorBridge.Editor.Settings;
-using EditorBridge.Editor.UseCases;
+using UniCortex.Editor.Infrastructures;
+using UniCortex.Editor.Presentations;
+using UniCortex.Editor.Settings;
+using UniCortex.Editor.UseCases;
 using UnityEditor;
 using UnityEngine;
 
-namespace EditorBridge.Editor
+namespace UniCortex.Editor
 {
     [InitializeOnLoad]
     internal static class EntryPoint
@@ -20,7 +20,7 @@ namespace EditorBridge.Editor
             s_dispatcher = new MainThreadDispatcher();
             EditorApplication.update += s_dispatcher.OnUpdate;
 
-            if (EditorBridgeSettings.instance.AutoStart)
+            if (UniCortexSettings.instance.AutoStart)
             {
                 StartServer();
             }
@@ -28,10 +28,10 @@ namespace EditorBridge.Editor
 
         private static void StartServer()
         {
-            var port = EditorBridgeSettings.instance.Port;
+            var port = UniCortexSettings.instance.Port;
             if (port is < 1 or > 65535)
             {
-                Debug.LogError($"[EditorBridge] Invalid port: {port}. Must be between 1 and 65535.");
+                Debug.LogError($"[UniCortex] Invalid port: {port}. Must be between 1 and 65535.");
                 return;
             }
 

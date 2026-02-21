@@ -1,6 +1,6 @@
 {
-  "name": "com.veyron-sakai.editor-bridge",
-  "displayName": "Editor Bridge",
+  "name": "com.veyron-sakai.uni-cortex",
+  "displayName": "UniCortex",
   "version": "0.1.0",
   "description": "Control Unity Editor via REST API and MCP.",
   "author": {

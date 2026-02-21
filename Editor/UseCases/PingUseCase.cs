@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using EditorBridge.Editor.Domains.Interfaces;
+using UniCortex.Editor.Domains.Interfaces;
 using UnityEngine;
 
-namespace EditorBridge.Editor.UseCases
+namespace UniCortex.Editor.UseCases
 {
     internal sealed class PingUseCase
     {

@@ -1,12 +1,12 @@
 using System.Threading;
-using EditorBridge.Editor.Domains.Models;
-using EditorBridge.Editor.Infrastructures;
-using EditorBridge.Editor.Presentations;
-using EditorBridge.Editor.Tests.TestDoubles;
-using EditorBridge.Editor.UseCases;
+using UniCortex.Editor.Domains.Models;
+using UniCortex.Editor.Infrastructures;
+using UniCortex.Editor.Presentations;
+using UniCortex.Editor.Tests.TestDoubles;
+using UniCortex.Editor.UseCases;
 using NUnit.Framework;
 
-namespace EditorBridge.Editor.Tests.Presentations
+namespace UniCortex.Editor.Tests.Presentations
 {
     [TestFixture]
     internal sealed class PingHandlerTest

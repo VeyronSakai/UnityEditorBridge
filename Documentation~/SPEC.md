@@ -1,8 +1,8 @@
-# UnityEditorBridge 仕様書
+# UniCortex 仕様書
 
 ## 概要
 
-UnityEditorBridge は、Unity Editor を外部から操作するためのツールキットです。
+UniCortex は、Unity Editor を外部から操作するためのツールキットです。
 Unity Editor 内に HTTP サーバーを埋め込み、MCP サーバーを介して AI エージェントが直接 Editor を制御します。
 
 AI エージェント（Claude Code, Codex CLI 等）が MCP プロトコルを通じて Unity Editor を操作することを主な目的としています。
@@ -16,21 +16,21 @@ AI エージェント（Claude Code, Codex CLI 等）が MCP プロトコルを�
 
 ## 名前
 
-- GitHub リポジトリ: `UnityEditorBridge`
-- UPM パッケージ名: `com.veyron-sakai.editor-bridge`
-- MCP サーバー起動: `dotnet run --project <path>/Tools~/UnityEditorBridge.Mcp/`
+- GitHub リポジトリ: `UniCortex`
+- UPM パッケージ名: `com.veyron-sakai.uni-cortex`
+- MCP サーバー起動: `dotnet run --project <path>/Tools~/UniCortex.Mcp/`
 
 ---
 
 ## ディレクトリ構成
 
 ```
-UnityEditorBridge/
+UniCortex/
 ├── package.json
 ├── README.md
 ├── LICENSE
 ├── Editor/
-│   ├── UnityEditorBridge.Editor.asmdef
+│   ├── UniCortex.Editor.asmdef
 │   ├── AssemblyInfo.cs
 │   ├── EntryPoint.cs
 │   ├── Domains/
@@ -54,10 +54,10 @@ UnityEditorBridge/
 │   ├── UseCases/
 │   │   └── PingUseCase.cs
 │   └── Settings/
-│       └── EditorBridgeSettings.cs
+│       └── UniCortexSettings.cs
 ├── Tools~/
-│   └── UnityEditorBridge.Mcp/
-│       ├── UnityEditorBridge.Mcp.csproj
+│   └── UniCortex.Mcp/
+│       ├── UniCortex.Mcp.csproj
 │       ├── Program.cs
 │       └── Tools/
 │           └── PingTool.cs
@@ -86,7 +86,7 @@ UnityEditorBridge/
 | Port | 56780 | リッスンポート |
 | AutoStart | true | 自動開始 |
 
-Project Settings UI（`Project/Unity Editor Bridge`）から変更可能。
+Project Settings UI（`Project/UniCortex`）から変更可能。
 
 ### メインスレッドディスパッチ
 
@@ -103,7 +103,7 @@ Unity API はメインスレッドからのみ呼び出し可能。HttpListener 
 
 リクエスト/レスポンスの JSON シリアライズには DTO クラスを使用する。
 
-- `Editor/Domains/Models/` に配置。namespace: `EditorBridge.Editor.Domains.Models`
+- `Editor/Domains/Models/` に配置。namespace: `UniCortex.Editor.Domains.Models`
 - `[Serializable]` 属性 + public fields（camelCase）
 - Unity 依存（`using UnityEngine` 等）を含めないこと（MCP サーバーと共有するため）
 - Unity 側: `JsonUtility.ToJson()` / `JsonUtility.FromJson<T>()`
@@ -183,7 +183,7 @@ GameObject を作成する。
 - トランスポート: stdio
 - `dotnet run --project` で直接起動（事前ビルド不要）
 
-### プロジェクトファイル（UnityEditorBridge.Mcp.csproj）
+### プロジェクトファイル（UniCortex.Mcp.csproj）
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
@@ -192,7 +192,7 @@ GameObject を作成する。
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>UnityEditorBridge.Mcp</RootNamespace>
+    <RootNamespace>UniCortex.Mcp</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ModelContextProtocol" Version="0.9.0-preview.1" />
@@ -209,7 +209,7 @@ GameObject を作成する。
 - `Host.CreateApplicationBuilder` で MCP サーバーを構築
 - `.WithStdioServerTransport()` で stdio トランスポート
 - `.WithToolsFromAssembly()` でツール自動検出
-- `HttpClient` を DI に登録（ベースアドレスは環境変数 `UEB_URL` / デフォルト `http://localhost:56780`）
+- `HttpClient` を DI に登録（ベースアドレスは環境変数 `UNICORTEX_URL` / デフォルト `http://localhost:56780`）
 - ログは stderr に出力（stdout は MCP プロトコル用）
 
 ### MCP ツール
@@ -230,10 +230,10 @@ Unity プロジェクトのルートに `.mcp.json` を配置するだけで利�
 ```json
 {
   "mcpServers": {
-    "unity-editor-bridge": {
+    "uni-cortex": {
       "type": "stdio",
       "command": "dotnet",
-      "args": ["run", "--project", "Library/PackageCache/com.veyron-sakai.editor-bridge@0.1.0/Tools~/UnityEditorBridge.Mcp/"]
+      "args": ["run", "--project", "Library/PackageCache/com.veyron-sakai.uni-cortex@0.1.0/Tools~/UniCortex.Mcp/"]
     }
   }
 }
@@ -247,8 +247,8 @@ Unity プロジェクトのルートに `.mcp.json` を配置するだけで利�
 
 ```json
 {
-  "name": "com.veyron-sakai.editor-bridge",
-  "displayName": "Editor Bridge",
+  "name": "com.veyron-sakai.uni-cortex",
+  "displayName": "UniCortex",
   "version": "0.1.0",
   "description": "Control Unity Editor via REST API and MCP.",
   "author": {
@@ -258,12 +258,12 @@ Unity プロジェクトのルートに `.mcp.json` を配置するだけで利�
 }
 ```
 
-### Assembly Definition（UnityEditorBridge.Editor.asmdef）
+### Assembly Definition（UniCortex.Editor.asmdef）
 
 ```json
 {
-  "name": "UnityEditorBridge.Editor",
-  "rootNamespace": "UnityEditorBridge.Editor",
+  "name": "UniCortex.Editor",
+  "rootNamespace": "UniCortex.Editor",
   "includePlatforms": ["Editor"]
 }
 ```

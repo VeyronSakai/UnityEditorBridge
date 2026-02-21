@@ -1,8 +1,8 @@
-using EditorBridge.Editor.Tests.TestDoubles;
-using EditorBridge.Editor.UseCases;
+using UniCortex.Editor.Tests.TestDoubles;
+using UniCortex.Editor.UseCases;
 using NUnit.Framework;
 
-namespace EditorBridge.Editor.Tests.UseCases
+namespace UniCortex.Editor.Tests.UseCases
 {
     [TestFixture]
     internal sealed class PingUseCaseTest

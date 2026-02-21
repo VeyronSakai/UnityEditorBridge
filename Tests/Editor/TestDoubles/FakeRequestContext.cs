@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using EditorBridge.Editor.Domains.Interfaces;
+using UniCortex.Editor.Domains.Interfaces;
 
-namespace EditorBridge.Editor.Tests.TestDoubles
+namespace UniCortex.Editor.Tests.TestDoubles
 {
     // IMPORTANT: Async methods must return synchronously completed tasks
     // (Task.CompletedTask / Task.FromResult). Do NOT use Task.Yield() or any

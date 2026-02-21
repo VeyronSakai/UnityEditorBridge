@@ -1,16 +1,16 @@
 using UnityEditor;
 
-namespace EditorBridge.Editor.Settings
+namespace UniCortex.Editor.Settings
 {
     /// <summary>
-    /// Persistent user settings for the EditorBridge server.
+    /// Persistent user settings for the UniCortex server.
     ///
     /// Stored as a ScriptableSingleton at the Unity Preferences folder
-    /// (e.g. ~/Library/Preferences/Unity/EditorBridge/Settings.asset on macOS).
+    /// (e.g. ~/Library/Preferences/Unity/UniCortex/Settings.asset on macOS).
     /// This means settings survive project switches and are per-user, not per-project.
     /// </summary>
-    [FilePath("EditorBridge/Settings.asset", FilePathAttribute.Location.PreferencesFolder)]
-    internal sealed class EditorBridgeSettings : ScriptableSingleton<EditorBridgeSettings>
+    [FilePath("UniCortex/Settings.asset", FilePathAttribute.Location.PreferencesFolder)]
+    internal sealed class UniCortexSettings : ScriptableSingleton<UniCortexSettings>
     {
         // The TCP port number the HTTP server listens on.
         // Defaults to 56780 — a high port unlikely to conflict with common services.

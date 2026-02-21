@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using EditorBridge.Editor.Domains.Interfaces;
-using EditorBridge.Editor.Domains.Models;
+using UniCortex.Editor.Domains.Interfaces;
+using UniCortex.Editor.Domains.Models;
 using UnityEngine;
 
-namespace EditorBridge.Editor.Infrastructures
+namespace UniCortex.Editor.Infrastructures
 {
     internal sealed class RequestRouter : IRequestRouter
     {
@@ -52,7 +52,7 @@ namespace EditorBridge.Editor.Infrastructures
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[EditorBridge] {rawMethod} {path} failed: {ex}");
+                Debug.LogError($"[UniCortex] {rawMethod} {path} failed: {ex}");
                 await context.WriteResponseAsync(500, JsonUtility.ToJson(new ErrorResponse("Internal server error")));
             }
         }

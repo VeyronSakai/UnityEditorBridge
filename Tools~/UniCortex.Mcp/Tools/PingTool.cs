@@ -1,16 +1,16 @@
 using System.ComponentModel;
 using System.Text.Json;
-using EditorBridge.Editor.Domains.Models;
+using UniCortex.Editor.Domains.Models;
 using JetBrains.Annotations;
 using ModelContextProtocol.Server;
 
-namespace UnityEditorBridge.Mcp.Tools;
+namespace UniCortex.Mcp.Tools;
 
 [McpServerToolType, UsedImplicitly]
 public class PingTool(IHttpClientFactory httpClientFactory)
 {
     private static readonly JsonSerializerOptions s_jsonOptions = new() { IncludeFields = true };
-    private readonly HttpClient _httpClient = httpClientFactory.CreateClient("EditorBridge");
+    private readonly HttpClient _httpClient = httpClientFactory.CreateClient("UniCortex");
 
     [McpServerTool(ReadOnly = true), Description("Check connectivity with the Unity Editor."), UsedImplicitly]
     public async Task<string> Ping(CancellationToken cancellationToken)
