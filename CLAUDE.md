@@ -18,7 +18,7 @@ Unity Editor を外部から REST API + MCP で操作するツールキット。
 - Unity API 呼び出しは必ず MainThreadDispatcher 経由
 - シーン変更操作はすべて Undo 対応
 - JSON シリアライズは DTO クラス + JsonUtility（Unity 側）/ System.Text.Json（MCP サーバー側）
-- DTO は Editor/Models/ に配置、namespace は EditorBridge.Editor.Models
+- DTO は Editor/Domains/Models/ に配置、namespace は EditorBridge.Editor.Domains.Models
 - DTO に Unity 依存（using UnityEngine 等）を入れないこと（MCP サーバーと共有するため）
 - MCP サーバーの設定例（`.mcp.json`）:
   ```json
