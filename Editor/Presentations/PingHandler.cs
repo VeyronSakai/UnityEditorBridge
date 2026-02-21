@@ -23,7 +23,7 @@ namespace UniCortex.Editor.Presentations
 
         private async Task HandlePingAsync(IRequestContext context, CancellationToken cancellationToken)
         {
-            var message = await _useCase.ExecuteAsync();
+            var message = await _useCase.ExecuteAsync(cancellationToken);
             var json = JsonUtility.ToJson(new PingResponse(status: "ok", message: message));
             await context.WriteResponseAsync(200, json);
         }

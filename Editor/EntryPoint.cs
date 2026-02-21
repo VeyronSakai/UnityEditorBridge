@@ -38,8 +38,16 @@ namespace UniCortex.Editor
             var pingUseCase = new PingUseCase(s_dispatcher);
             var pingHandler = new PingHandler(pingUseCase);
 
+            var playUseCase = new PlayUseCase(s_dispatcher);
+            var playHandler = new PlayHandler(playUseCase);
+
+            var stopUseCase = new StopUseCase(s_dispatcher);
+            var stopHandler = new StopHandler(stopUseCase);
+
             var router = new RequestRouter();
             pingHandler.Register(router);
+            playHandler.Register(router);
+            stopHandler.Register(router);
 
             s_server = new HttpListenerServer(router, port);
             s_server.Start();

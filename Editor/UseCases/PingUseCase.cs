@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using UniCortex.Editor.Domains.Interfaces;
 using UnityEngine;
@@ -13,9 +14,9 @@ namespace UniCortex.Editor.UseCases
             _dispatcher = dispatcher;
         }
 
-        public async Task<string> ExecuteAsync()
+        public async Task<string> ExecuteAsync(CancellationToken cancellationToken)
         {
-            await _dispatcher.RunOnMainThread(() => Debug.Log("pong"));
+            await _dispatcher.RunOnMainThreadAsync(() => Debug.Log("pong"), cancellationToken);
             return "pong";
         }
     }

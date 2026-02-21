@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using UniCortex.Editor.Domains.Interfaces;
 
@@ -18,14 +19,18 @@ namespace UniCortex.Editor.Tests.TestDoubles
     {
         public int CallCount { get; private set; }
 
-        public Task<T> RunOnMainThread<T>(Func<T> func)
+        public Task<T> RunOnMainThreadAsync<T>(Func<T> func, CancellationToken cancellationToken = default)
         {
+            if (cancellationToken.IsCancellationRequested)
+                return Task.FromCanceled<T>(cancellationToken);
             CallCount++;
             return Task.FromResult(func());
         }
 
-        public Task RunOnMainThread(Action action)
+        public Task RunOnMainThreadAsync(Action action, CancellationToken cancellationToken = default)
         {
+            if (cancellationToken.IsCancellationRequested)
+                return Task.FromCanceled(cancellationToken);
             CallCount++;
             action();
             return Task.CompletedTask;
