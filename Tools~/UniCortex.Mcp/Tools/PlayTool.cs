@@ -15,6 +15,8 @@ public class PlayTool(IHttpClientFactory httpClientFactory)
         var httpClient = httpClientFactory.CreateClient("UniCortex");
         var jsonOptions = new JsonSerializerOptions { IncludeFields = true };
 
+        await DomainReloadHelper.ReloadAsync(httpClient, cancellationToken);
+
         var response = await httpClient.PostAsync(ApiRoutes.Play, null, cancellationToken);
         response.EnsureSuccessStatusCode();
 
