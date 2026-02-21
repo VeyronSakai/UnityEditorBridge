@@ -17,8 +17,9 @@ namespace UniCortex.Editor.UseCases
 
         public async Task<EditorStatusResponse> ExecuteAsync(CancellationToken cancellationToken)
         {
-            var isPlaying = await _dispatcher.RunOnMainThreadAsync(() => EditorApplication.isPlaying, cancellationToken);
-            return new EditorStatusResponse(isPlaying);
+            var (isPlaying, isPaused) = await _dispatcher.RunOnMainThreadAsync(
+                () => (EditorApplication.isPlaying, EditorApplication.isPaused), cancellationToken);
+            return new EditorStatusResponse(isPlaying, isPaused);
         }
     }
 }
