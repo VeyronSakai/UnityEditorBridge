@@ -4,13 +4,13 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>UnityEditorBridge.CLI</RootNamespace>
-    <PackAsTool>true</PackAsTool>
-    <ToolCommandName>ueb</ToolCommandName>
-    <LangVersion>13.0</LangVersion>
+    <RootNamespace>UnityEditorBridge.Mcp</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ConsoleAppFramework" Version="5.7.13" />
+    <PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
+    <PackageReference Include="ModelContextProtocol" Version="0.9.0-preview.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="../../Editor/Domains/Models/**/*.cs" LinkBase="Models" />

@@ -1,6 +1,6 @@
 # UnityEditorBridge
 
-Unity Editor を外部から REST API + CLI で操作するツールキット。
+Unity Editor を外部から REST API + MCP で操作するツールキット。
 
 ## 仕様書
 
@@ -10,14 +10,25 @@ Unity Editor を外部から REST API + CLI で操作するツールキット。
 ## 技術スタック
 
 - Unity Editor 側: C# HttpListener HTTP サーバー
-- CLI: .NET 8 + ConsoleAppFramework v5、dotnet local tool として配布
+- MCP Server: .NET 8 + Model Context Protocol C# SDK
 - UPM パッケージ: com.veyron-sakai.editor-bridge
 
 ## 重要な規約
 
 - Unity API 呼び出しは必ず MainThreadDispatcher 経由
 - シーン変更操作はすべて Undo 対応
-- JSON シリアライズは DTO クラス + JsonUtility（Unity 側）/ System.Text.Json（CLI 側）
-- DTO は Editor/Models/ に配置、namespace は EditorBridge.Editor.Models
-- DTO に Unity 依存（using UnityEngine 等）を入れないこと（CLI と共有するため）
-- CLI の実行は `dotnet ueb`
+- JSON シリアライズは DTO クラス + JsonUtility（Unity 側）/ System.Text.Json（MCP サーバー側）
+- DTO は Editor/Domains/Models/ に配置、namespace は EditorBridge.Editor.Domains.Models
+- DTO に Unity 依存（using UnityEngine 等）を入れないこと（MCP サーバーと共有するため）
+- MCP サーバーの設定例（`.mcp.json`）:
+  ```json
+  {
+    "mcpServers": {
+      "unity-editor-bridge": {
+        "type": "stdio",
+        "command": "dotnet",
+        "args": ["run", "--project", "Library/PackageCache/com.veyron-sakai.editor-bridge@0.1.0/Tools~/UnityEditorBridge.Mcp/"]
+      }
+    }
+  }
+  ```

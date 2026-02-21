@@ -3,21 +3,22 @@
 ## 概要
 
 UnityEditorBridge は、Unity Editor を外部から操作するためのツールキットです。
-Unity Editor 内に HTTP サーバーを埋め込み、C# 製の CLI ツールからリクエストを送ることで Editor を制御します。
+Unity Editor 内に HTTP サーバーを埋め込み、MCP サーバーを介して AI エージェントが直接 Editor を制御します。
 
-AI エージェント（Claude Code, Codex CLI 等）がシェルコマンド経由で Unity Editor を操作することを主な目的としています。
+AI エージェント（Claude Code, Codex CLI 等）が MCP プロトコルを通じて Unity Editor を操作することを主な目的としています。
 
 ## 設計原則
 
 - **C# のみで完結**: Python, Node.js 等の外部ランタイムに依存しない
-- **素の REST API**: MCP/ACP に縛られない JSON over HTTP
+- **MCP プロトコル対応**: AI エージェントが MCP を通じて直接操作可能
+- **REST API も維持**: curl 等での直接アクセスも引き続き可能
 - **UPM パッケージとして配布**
 
 ## 名前
 
 - GitHub リポジトリ: `UnityEditorBridge`
 - UPM パッケージ名: `com.veyron-sakai.editor-bridge`
-- CLI コマンド: `dotnet ueb`
+- MCP サーバー起動: `dotnet run --project <path>/Tools~/UnityEditorBridge.Mcp/`
 
 ---
 
@@ -30,34 +31,42 @@ UnityEditorBridge/
 ├── LICENSE
 ├── Editor/
 │   ├── UnityEditorBridge.Editor.asmdef
-│   ├── Server/
-│   │   ├── EditorBridgeServer.cs       ← HttpListener HTTP サーバー
-│   │   ├── RequestRouter.cs            ← パスルーティング
-│   │   └── MainThreadDispatcher.cs     ← メインスレッドディスパッチ
-│   ├── Models/
-│   │   ├── PingResponse.cs             ← GET /ping レスポンス DTO
-│   │   └── ErrorResponse.cs            ← エラーレスポンス DTO
-│   ├── Handlers/
-│   │   ├── PingHandler.cs
-│   │   ├── EditorHandlers.cs
-│   │   └── GameObjectHandlers.cs
+│   ├── AssemblyInfo.cs
+│   ├── EntryPoint.cs
+│   ├── Domains/
+│   │   ├── Interfaces/
+│   │   │   ├── IHttpServer.cs
+│   │   │   ├── IMainThreadDispatcher.cs
+│   │   │   ├── IRequestContext.cs
+│   │   │   └── IRequestRouter.cs
+│   │   └── Models/
+│   │       ├── ApiRoutes.cs
+│   │       ├── ErrorResponse.cs         ← エラーレスポンス DTO
+│   │       ├── HttpMethodType.cs
+│   │       └── PingResponse.cs          ← GET /ping レスポンス DTO
+│   ├── Infrastructures/
+│   │   ├── HttpListenerRequestContext.cs
+│   │   ├── HttpListenerServer.cs        ← HttpListener HTTP サーバー
+│   │   ├── MainThreadDispatcher.cs      ← メインスレッドディスパッチ
+│   │   └── RequestRouter.cs             ← パスルーティング
+│   ├── Presentations/
+│   │   └── PingHandler.cs
+│   ├── UseCases/
+│   │   └── PingUseCase.cs
 │   └── Settings/
-│       ├── EditorBridgeSettings.cs
-│       └── EditorBridgeSettingsProvider.cs
+│       └── EditorBridgeSettings.cs
 ├── Tools~/
-│   └── UnityEditorBridge.CLI/
-│       ├── UnityEditorBridge.CLI.csproj
+│   └── UnityEditorBridge.Mcp/
+│       ├── UnityEditorBridge.Mcp.csproj
 │       ├── Program.cs
-│       ├── BridgeClient.cs
-│       └── Commands/
-│           ├── EditorCommands.cs
-│           └── GameObjectCommands.cs
+│       └── Tools/
+│           └── PingTool.cs
 └── docs/
     └── SPEC.md                         ← この文書
 ```
 
 - `Editor/` — Unity Editor 拡張。asmdef で `includePlatforms: ["Editor"]`
-- `Tools~/` — `~` サフィックスにより Unity のインポート対象外。.NET 8 CLI プロジェクト
+- `Tools~/` — `~` サフィックスにより Unity のインポート対象外。.NET 8 MCP サーバープロジェクト
 
 ---
 
@@ -94,12 +103,12 @@ Unity API はメインスレッドからのみ呼び出し可能。HttpListener 
 
 リクエスト/レスポンスの JSON シリアライズには DTO クラスを使用する。
 
-- `Editor/Models/` に配置。namespace: `EditorBridge.Editor.Models`
+- `Editor/Domains/Models/` に配置。namespace: `EditorBridge.Editor.Domains.Models`
 - `[Serializable]` 属性 + public fields（camelCase）
-- Unity 依存（`using UnityEngine` 等）を含めないこと（CLI と共有するため）
+- Unity 依存（`using UnityEngine` 等）を含めないこと（MCP サーバーと共有するため）
 - Unity 側: `JsonUtility.ToJson()` / `JsonUtility.FromJson<T>()`
-- CLI 側: `System.Text.Json` + `JsonSerializerOptions { IncludeFields = true }`
-- CLI の .csproj で `<Compile Include="../../Editor/Models/**/*.cs" LinkBase="Models" />` としてソース共有
+- MCP サーバー側: `System.Text.Json` + `JsonSerializerOptions { IncludeFields = true }`
+- MCP サーバーの .csproj で `<Compile Include="../../Editor/Domains/Models/**/*.cs" LinkBase="Models" />` としてソース共有
 
 ---
 
@@ -160,15 +169,21 @@ GameObject を作成する。
 
 ---
 
-## コンポーネント 2: CLI ツール（dotnet ueb）
+## コンポーネント 2: MCP サーバー（dotnet run --project）
+
+### 構成
+
+`AI Agent ←(MCP/stdio)→ MCP Server ←(HTTP)→ Unity Editor HTTP Server`
 
 ### 技術スタック
 
 - .NET 8（`net8.0`）
-- ConsoleAppFramework v5（5.7.13）
-- dotnet local tool として配布
+- ModelContextProtocol SDK（0.9.0-preview.1）
+- Microsoft.Extensions.Hosting（8.0.0）
+- トランスポート: stdio
+- `dotnet run --project` で直接起動（事前ビルド不要）
 
-### プロジェクトファイル（UnityEditorBridge.CLI.csproj）
+### プロジェクトファイル（UnityEditorBridge.Mcp.csproj）
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
@@ -177,70 +192,54 @@ GameObject を作成する。
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>UnityEditorBridge.CLI</RootNamespace>
-    <PackAsTool>true</PackAsTool>
-    <ToolCommandName>ueb</ToolCommandName>
+    <RootNamespace>UnityEditorBridge.Mcp</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ConsoleAppFramework" Version="5.7.13" />
+    <PackageReference Include="ModelContextProtocol" Version="0.9.0-preview.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../../Editor/Domains/Models/**/*.cs" LinkBase="Models" />
   </ItemGroup>
 </Project>
 ```
 
 ### エントリポイント（Program.cs）
 
-```csharp
-using ConsoleAppFramework;
+- `Host.CreateApplicationBuilder` で MCP サーバーを構築
+- `.WithStdioServerTransport()` で stdio トランスポート
+- `.WithToolsFromAssembly()` でツール自動検出
+- `HttpClient` を DI に登録（ベースアドレスは環境変数 `UEB_URL` / デフォルト `http://localhost:56780`）
+- ログは stderr に出力（stdout は MCP プロトコル用）
 
-var app = ConsoleApp.Create();
-app.Add<EditorCommands>("editor");
-app.Add<GameObjectCommands>("gameobject");
-app.Run(args);
-```
+### MCP ツール
 
-### 共通 HTTP クライアント（BridgeClient.cs）
+| ツール | API | 説明 |
+|--------|-----|------|
+| `Ping` | GET `/ping` | 疎通確認 |
 
-- ベースアドレス: 環境変数 `UEB_URL`（デフォルト `http://localhost:56780`）
-- `GetAsync(path)` / `PostAsync(path, payload)` メソッドを提供
-- レスポンス JSON を整形して stdout に出力
-- エラー時は stderr に出力、exit code 1
-
-### CLI コマンド
-
-#### editor
-
-| コマンド | API | 説明 |
-|---------|-----|------|
-| `dotnet ueb editor ping` | GET `/ping` | 疎通確認 |
-| `dotnet ueb editor play` | POST `/editor/play` | Play 開始 |
-| `dotnet ueb editor stop` | POST `/editor/stop` | Play 停止 |
-
-#### gameobject
-
-| コマンド | API | 説明 |
-|---------|-----|------|
-| `dotnet ueb gameobject create --name <名前> [--primitive Cube]` | POST `/gameobject/create` | オブジェクト作成 |
-
-各メソッドに `/// <summary>` と `/// <param name="">` を記述し、`--help` で説明が出るようにする。
+各ツールは `[McpServerToolType]` クラス内に `[McpServerTool]` メソッドとして定義。
+`IHttpClientFactory` をコンストラクタ DI で受け取り、Unity Editor HTTP サーバーにリクエストを送信する。
 
 ---
 
-## CLI インストール
+## MCP サーバーセットアップ
 
-CLI はユーザーが手動でインストールする。Unity プロジェクトのルートで以下を実行:
+Unity プロジェクトのルートに `.mcp.json` を配置するだけで利用可能。事前のビルドやツールインストールは不要。
 
-```bash
-# nupkg をビルド
-dotnet pack Library/PackageCache/com.veyron-sakai.editor-bridge@*/Tools~/UnityEditorBridge.CLI/ \
-  -c Release -o Library/EditorBridge/nupkg
-
-# tool manifest がなければ作成
-dotnet new tool-manifest
-
-# ローカルツールとしてインストール
-dotnet tool install UnityEditorBridge.CLI --local \
-  --add-source Library/EditorBridge/nupkg
+```json
+{
+  "mcpServers": {
+    "unity-editor-bridge": {
+      "type": "stdio",
+      "command": "dotnet",
+      "args": ["run", "--project", "Library/PackageCache/com.veyron-sakai.editor-bridge@0.1.0/Tools~/UnityEditorBridge.Mcp/"]
+    }
+  }
+}
 ```
+
+`dotnet run` が初回実行時に自動でビルドし、MCP サーバーを起動する。
 
 ---
 
@@ -249,15 +248,13 @@ dotnet tool install UnityEditorBridge.CLI --local \
 ```json
 {
   "name": "com.veyron-sakai.editor-bridge",
+  "displayName": "Editor Bridge",
   "version": "0.1.0",
-  "displayName": "Unity Editor Bridge",
-  "description": "Control Unity Editor via REST API and CLI.",
-  "unity": "2021.3",
+  "description": "Control Unity Editor via REST API and MCP.",
   "author": {
     "name": "veyron-sakai",
     "url": "https://github.com/veyron-sakai"
-  },
-  "license": "MIT"
+  }
 }
 ```
 
@@ -276,19 +273,9 @@ dotnet tool install UnityEditorBridge.CLI --local \
 ## 使用例
 
 ```bash
-# 疎通確認（Unity Console に pong と出る）
-dotnet ueb editor ping
-
-# Play 開始
-dotnet ueb editor play
-
-# Play 停止
-dotnet ueb editor stop
-
-# Cube を作成
-dotnet ueb gameobject create --name "Player" --primitive Cube
-
-# curl でも可
+# curl で直接 API を呼ぶことも可能
 curl http://localhost:56780/ping
 curl -X POST http://localhost:56780/editor/play
 ```
+
+MCP 経由の操作は AI エージェント（Claude Code 等）の MCP 設定に追加することで利用可能。

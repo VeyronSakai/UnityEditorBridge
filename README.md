@@ -3,21 +3,21 @@
 > **Warning**
 > This project is in a very early stage of development. Only a small subset of features has been implemented, and the API and command structure are subject to significant changes without notice.
 
-A toolkit for controlling Unity Editor externally via REST API and CLI.
+A toolkit for controlling Unity Editor externally via REST API and MCP (Model Context Protocol).
 
-Primarily designed for AI agents (Claude Code, Codex CLI, etc.) to operate Unity Editor through shell commands.
+Primarily designed for AI agents (Claude Code, Codex CLI, etc.) to operate Unity Editor through MCP.
 
 ## Features
 
 - Pure C# — no external runtimes like Python or Node.js required
 - Embeds an HTTP server inside Unity Editor, controlled via REST API
-- .NET 8 CLI tool (`dotnet ueb`) for command-line operation
+- .NET 8 MCP server (run via `dotnet run`) for AI agent integration via stdio
 - Distributed as a UPM package
 
 ## Requirements
 
-- Unity 2021.3 or later
-- .NET 8 SDK (for CLI usage)
+- Unity 2022.3 or later
+- .NET 8 SDK (for MCP server)
 
 ## Installation
 
@@ -32,47 +32,23 @@ Add via Unity Package Manager using a Git URL:
 https://github.com/VeyronSakai/UnityEditorBridge.git
 ```
 
-### CLI Setup
+### MCP Server Setup
 
-After installing the UPM package, run the following commands in the **Unity project root** to install the CLI as a dotnet local tool:
+Add the following to `.mcp.json` in the Unity project root:
 
-```bash
-# 1. Build the nupkg from the package source
-dotnet pack Library/PackageCache/com.veyron-sakai.editor-bridge@*/Tools~/UnityEditorBridge.CLI/ \
-  -c Release -o Library/EditorBridge/nupkg
-
-# 2. Create a tool manifest if one does not exist yet
-dotnet new tool-manifest
-
-# 3. Install the CLI as a local tool
-dotnet tool install UnityEditorBridge.CLI --local \
-  --add-source Library/EditorBridge/nupkg
+```json
+{
+  "mcpServers": {
+    "unity-editor-bridge": {
+      "type": "stdio",
+      "command": "dotnet",
+      "args": ["run", "--project", "Library/PackageCache/com.veyron-sakai.editor-bridge@0.1.0/Tools~/UnityEditorBridge.Mcp/"]
+    }
+  }
+}
 ```
 
-Once installed, the CLI is available via `dotnet ueb` within the project directory.
-
-## Usage
-
-```bash
-# Health check (logs "pong" in Unity Console)
-dotnet ueb editor ping
-
-# Start Play mode
-dotnet ueb editor play
-
-# Stop Play mode
-dotnet ueb editor stop
-
-# Create a GameObject
-dotnet ueb gameobject create --name "Player" --primitive Cube
-```
-
-You can also call the API directly with curl:
-
-```bash
-curl http://localhost:56780/ping
-curl -X POST http://localhost:56780/editor/play
-```
+No pre-build or tool installation is required. The MCP server is built and started automatically via `dotnet run`.
 
 ## API Endpoints
 
@@ -82,6 +58,13 @@ curl -X POST http://localhost:56780/editor/play
 | POST | `/editor/play` | Start Play mode |
 | POST | `/editor/stop` | Stop Play mode |
 | POST | `/gameobject/create` | Create a GameObject |
+
+You can also call the API directly with curl:
+
+```bash
+curl http://localhost:56780/ping
+curl -X POST http://localhost:56780/editor/play
+```
 
 ## Settings
 
@@ -94,10 +77,10 @@ Configurable from Project Settings > Unity Editor Bridge.
 
 ## Contributing
 
-When developing this package locally, you can run the CLI directly from source without building a nupkg:
+When developing this package locally:
 
 ```bash
-dotnet run --project Tools~/UnityEditorBridge.CLI -- editor ping
+dotnet run --project Tools~/UnityEditorBridge.Mcp/
 ```
 
 ## License
