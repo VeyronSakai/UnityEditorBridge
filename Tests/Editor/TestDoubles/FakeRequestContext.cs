@@ -12,18 +12,16 @@ namespace EditorBridge.Editor.Tests.TestDoubles
         public int ResponseStatusCode { get; private set; }
         public string ResponseBody { get; private set; }
 
-        public async Task<string> ReadBodyAsync()
+        public Task<string> ReadBodyAsync()
         {
-            await Task.Yield(); // Simulate asynchronous behavior
-            return Body;
+            return Task.FromResult(Body);
         }
 
-        public async Task WriteResponseAsync(int statusCode, string json)
+        public Task WriteResponseAsync(int statusCode, string json)
         {
-            await Task.Yield(); // Simulate asynchronous behavior
-
             ResponseStatusCode = statusCode;
             ResponseBody = json;
+            return Task.CompletedTask;
         }
     }
 }
