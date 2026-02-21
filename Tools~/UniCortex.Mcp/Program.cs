@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using UniCortex.Mcp;
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -10,6 +11,7 @@ builder.Logging.AddConsole(options =>
     options.LogToStandardErrorThreshold = LogLevel.Trace;
 });
 
+builder.Services.AddTransient<DomainReloadRetryHandler>();
 builder.Services.AddHttpClient("UniCortex", client =>
 {
     var baseUrl = Environment.GetEnvironmentVariable("UNICORTEX_URL") ?? "http://localhost:56780";
@@ -22,7 +24,7 @@ builder.Services.AddHttpClient("UniCortex", client =>
     }
 
     client.BaseAddress = baseUri;
-});
+}).AddHttpMessageHandler<DomainReloadRetryHandler>();
 
 builder.Services
     .AddMcpServer()

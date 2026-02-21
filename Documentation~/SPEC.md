@@ -126,7 +126,7 @@ Unity API はメインスレッドからのみ呼び出し可能。HttpListener 
 {"status": "ok", "message": "pong"}
 ```
 
-### POST `/editor/play`
+### POST `/play`
 
 Play モードを開始する。`EditorApplication.isPlaying = true`
 
@@ -135,7 +135,7 @@ Play モードを開始する。`EditorApplication.isPlaying = true`
 {"success": true}
 ```
 
-### POST `/editor/stop`
+### POST `/stop`
 
 Play モードを停止する。`EditorApplication.isPlaying = false`
 

@@ -9,16 +9,16 @@ namespace UniCortex.Mcp.Tools;
 [McpServerToolType, UsedImplicitly]
 public class PingTool(IHttpClientFactory httpClientFactory)
 {
-    private static readonly JsonSerializerOptions s_jsonOptions = new() { IncludeFields = true };
-    private readonly HttpClient _httpClient = httpClientFactory.CreateClient("UniCortex");
-
     [McpServerTool(ReadOnly = true), Description("Check connectivity with the Unity Editor."), UsedImplicitly]
     public async Task<string> Ping(CancellationToken cancellationToken)
     {
-        var response = await _httpClient.GetAsync(ApiRoutes.Ping, cancellationToken);
+        var httpClient = httpClientFactory.CreateClient("UniCortex");
+        var jsonOptions = new JsonSerializerOptions { IncludeFields = true };
+
+        var response = await httpClient.GetAsync(ApiRoutes.Ping, cancellationToken);
         response.EnsureSuccessStatusCode();
         var json = await response.Content.ReadAsStringAsync(cancellationToken);
-        var ping = JsonSerializer.Deserialize<PingResponse>(json, s_jsonOptions)!;
+        var ping = JsonSerializer.Deserialize<PingResponse>(json, jsonOptions)!;
         return ping.message;
     }
 }
