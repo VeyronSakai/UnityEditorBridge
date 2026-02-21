@@ -1,7 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using UniCortex.Editor.Domains.Interfaces;
-using UniCortex.Editor.Domains.Models;
 using UnityEditor;
 using UnityEngine;
 
@@ -16,14 +15,13 @@ namespace UniCortex.Editor.UseCases
             _dispatcher = dispatcher;
         }
 
-        public async Task<PlayStopResponse> ExecuteAsync(CancellationToken cancellationToken = default)
+        public async Task ExecuteAsync(CancellationToken cancellationToken = default)
         {
             await _dispatcher.RunOnMainThreadAsync(() =>
             {
                 EditorApplication.isPlaying = true;
                 Debug.Log("[UniCortex] Play");
             }, cancellationToken);
-            return new PlayStopResponse(success: true);
         }
     }
 }
