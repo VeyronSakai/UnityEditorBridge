@@ -144,6 +144,24 @@ Play モードを停止する。`EditorApplication.isPlaying = false`
 {"success": true}
 ```
 
+### POST `/pause`
+
+Play モードを一時停止する。`EditorApplication.isPaused = true`
+
+レスポンス:
+```json
+{"success": true}
+```
+
+### POST `/unpause`
+
+Play モードの一時停止を解除する。`EditorApplication.isPaused = false`
+
+レスポンス:
+```json
+{"success": true}
+```
+
 ### POST `/gameobject/create`
 
 GameObject を作成する。
@@ -217,6 +235,8 @@ GameObject を作成する。
 | ツール | API | 説明 |
 |--------|-----|------|
 | `Ping` | GET `/ping` | 疎通確認 |
+| `Pause` | POST `/pause` | Play モード一時停止 |
+| `Unpause` | POST `/unpause` | Play モード一時停止解除 |
 
 各ツールは `[McpServerToolType]` クラス内に `[McpServerTool]` メソッドとして定義。
 `IHttpClientFactory` をコンストラクタ DI で受け取り、Unity Editor HTTP サーバーにリクエストを送信する。
