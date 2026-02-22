@@ -1,7 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using UniCortex.Editor.Domains.Interfaces;
-using UnityEditor.Compilation;
 using UnityEngine;
 
 namespace UniCortex.Editor.UseCases
@@ -9,10 +8,12 @@ namespace UniCortex.Editor.UseCases
     internal sealed class RequestDomainReloadUseCase
     {
         private readonly IMainThreadDispatcher _dispatcher;
+        private readonly ICompilationPipeline _compilationPipeline;
 
-        public RequestDomainReloadUseCase(IMainThreadDispatcher dispatcher)
+        public RequestDomainReloadUseCase(IMainThreadDispatcher dispatcher, ICompilationPipeline compilationPipeline)
         {
             _dispatcher = dispatcher;
+            _compilationPipeline = compilationPipeline;
         }
 
         public async Task ExecuteAsync(CancellationToken cancellationToken = default)
@@ -20,7 +21,7 @@ namespace UniCortex.Editor.UseCases
             await _dispatcher.RunOnMainThreadAsync(() =>
             {
                 Debug.Log("[UniCortex] Domain Reload");
-                CompilationPipeline.RequestScriptCompilation();
+                _compilationPipeline.RequestScriptCompilation();
             }, cancellationToken);
         }
     }

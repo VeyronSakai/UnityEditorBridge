@@ -47,25 +47,28 @@ namespace UniCortex.Editor
 
         private static void RegisterHandlers(RequestRouter router)
         {
+            var editorApplication = new EditorApplicationAdapter();
+            var compilationPipeline = new CompilationPipelineAdapter();
+
             var pingUseCase = new PingUseCase(s_dispatcher);
             var pingHandler = new PingHandler(pingUseCase);
 
-            var playUseCase = new PlayUseCase(s_dispatcher);
+            var playUseCase = new PlayUseCase(s_dispatcher, editorApplication);
             var playHandler = new PlayHandler(playUseCase);
 
-            var stopUseCase = new StopUseCase(s_dispatcher);
+            var stopUseCase = new StopUseCase(s_dispatcher, editorApplication);
             var stopHandler = new StopHandler(stopUseCase);
 
-            var pauseUseCase = new PauseUseCase(s_dispatcher);
+            var pauseUseCase = new PauseUseCase(s_dispatcher, editorApplication);
             var pauseHandler = new PauseHandler(pauseUseCase);
 
-            var resumeUseCase = new ResumeUseCase(s_dispatcher);
+            var resumeUseCase = new ResumeUseCase(s_dispatcher, editorApplication);
             var resumeHandler = new ResumeHandler(resumeUseCase);
 
-            var requestDomainReloadUseCase = new RequestDomainReloadUseCase(s_dispatcher);
+            var requestDomainReloadUseCase = new RequestDomainReloadUseCase(s_dispatcher, compilationPipeline);
             var requestDomainReloadHandler = new DomainReloadHandler(requestDomainReloadUseCase);
 
-            var getEditorStatusUseCase = new GetEditorStatusUseCase(s_dispatcher);
+            var getEditorStatusUseCase = new GetEditorStatusUseCase(s_dispatcher, editorApplication);
             var editorStatusHandler = new EditorStatusHandler(getEditorStatusUseCase);
 
             pingHandler.Register(router);

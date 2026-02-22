@@ -2,23 +2,24 @@ using System.Threading;
 using System.Threading.Tasks;
 using UniCortex.Editor.Domains.Interfaces;
 using UniCortex.Editor.Domains.Models;
-using UnityEditor;
 
 namespace UniCortex.Editor.UseCases
 {
     internal sealed class GetEditorStatusUseCase
     {
         private readonly IMainThreadDispatcher _dispatcher;
+        private readonly IEditorApplication _editorApplication;
 
-        public GetEditorStatusUseCase(IMainThreadDispatcher dispatcher)
+        public GetEditorStatusUseCase(IMainThreadDispatcher dispatcher, IEditorApplication editorApplication)
         {
             _dispatcher = dispatcher;
+            _editorApplication = editorApplication;
         }
 
         public async Task<EditorStatusResponse> ExecuteAsync(CancellationToken cancellationToken)
         {
             var (isPlaying, isPaused) = await _dispatcher.RunOnMainThreadAsync(
-                () => (EditorApplication.isPlaying, EditorApplication.isPaused), cancellationToken);
+                () => (_editorApplication.IsPlaying, _editorApplication.IsPaused), cancellationToken);
             return new EditorStatusResponse(isPlaying, isPaused);
         }
     }

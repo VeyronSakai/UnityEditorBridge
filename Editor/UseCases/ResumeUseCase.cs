@@ -1,7 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using UniCortex.Editor.Domains.Interfaces;
-using UnityEditor;
 using UnityEngine;
 
 namespace UniCortex.Editor.UseCases
@@ -9,17 +8,19 @@ namespace UniCortex.Editor.UseCases
     internal sealed class ResumeUseCase
     {
         private readonly IMainThreadDispatcher _dispatcher;
+        private readonly IEditorApplication _editorApplication;
 
-        public ResumeUseCase(IMainThreadDispatcher dispatcher)
+        public ResumeUseCase(IMainThreadDispatcher dispatcher, IEditorApplication editorApplication)
         {
             _dispatcher = dispatcher;
+            _editorApplication = editorApplication;
         }
 
         public async Task ExecuteAsync(CancellationToken cancellationToken = default)
         {
             await _dispatcher.RunOnMainThreadAsync(() =>
             {
-                EditorApplication.isPaused = false;
+                _editorApplication.IsPaused = false;
                 Debug.Log("[UniCortex] Resume");
             }, cancellationToken);
         }
