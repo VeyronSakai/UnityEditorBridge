@@ -5,7 +5,7 @@ using UniCortex.Editor.Domains.Models;
 using UniCortex.Editor.UseCases;
 using UnityEngine;
 
-namespace UniCortex.Editor.Presentations
+namespace UniCortex.Editor.Handlers.Editor
 {
     internal sealed class PlayHandler
     {

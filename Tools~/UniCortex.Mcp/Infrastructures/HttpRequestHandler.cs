@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 
 namespace UniCortex.Mcp.Infrastructures;
 
-public class DomainReloadRetryHandler(ILogger<DomainReloadRetryHandler> logger) : DelegatingHandler
+public class HttpRequestHandler(ILogger<HttpRequestHandler> logger) : DelegatingHandler
 {
     private static readonly TimeSpan s_maxWait = TimeSpan.FromHours(1);
 
