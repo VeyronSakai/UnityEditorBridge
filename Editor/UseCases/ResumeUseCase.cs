@@ -6,11 +6,11 @@ using UnityEngine;
 
 namespace UniCortex.Editor.UseCases
 {
-    internal sealed class UnpauseUseCase
+    internal sealed class ResumeUseCase
     {
         private readonly IMainThreadDispatcher _dispatcher;
 
-        public UnpauseUseCase(IMainThreadDispatcher dispatcher)
+        public ResumeUseCase(IMainThreadDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
         }
@@ -20,7 +20,7 @@ namespace UniCortex.Editor.UseCases
             await _dispatcher.RunOnMainThreadAsync(() =>
             {
                 EditorApplication.isPaused = false;
-                Debug.Log("[UniCortex] Unpause");
+                Debug.Log("[UniCortex] Resume");
             }, cancellationToken);
         }
     }

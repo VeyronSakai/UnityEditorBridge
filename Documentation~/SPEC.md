@@ -250,12 +250,12 @@ GameObject を作成する。
 
 | ツール | API | 説明 |
 |--------|-----|------|
-| `editor_ping` | GET `/editor/ping` | 疎通確認 |
-| `editor_play` | POST `/editor/play` | Play モード開始 |
-| `editor_stop` | POST `/editor/stop` | Play モード停止 |
-| `editor_pause` | POST `/editor/pause` | Play モード一時停止 |
-| `editor_unpause` | POST `/editor/unpause` | Play モード一時停止解除 |
-| `editor_domain_reload` | POST `/editor/domain-reload` | ドメインリロード（スクリプト再コンパイル） |
+| `ping_editor` | GET `/editor/ping` | 疎通確認 |
+| `enter_play_mode` | POST `/editor/play` | Play モード開始 |
+| `exit_play_mode` | POST `/editor/stop` | Play モード停止 |
+| `pause_editor` | POST `/editor/pause` | エディターを一時停止 |
+| `resume_editor` | POST `/editor/unpause` | エディターの一時停止を解除 |
+| `reload_domain` | POST `/editor/domain-reload` | ドメインリロード（スクリプト再コンパイル） |
 
 各ツールは `[McpServerToolType]` クラス内に `[McpServerTool]` メソッドとして定義。
 `IHttpClientFactory` をコンストラクタ DI で受け取り、Unity Editor HTTP サーバーにリクエストを送信する。

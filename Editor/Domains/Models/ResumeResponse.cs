@@ -5,11 +5,11 @@ using System;
 namespace UniCortex.Editor.Domains.Models
 {
     [Serializable]
-    public class UnpauseResponse
+    public class ResumeResponse
     {
         public bool success;
 
-        public UnpauseResponse(bool success)
+        public ResumeResponse(bool success)
         {
             this.success = success;
         }

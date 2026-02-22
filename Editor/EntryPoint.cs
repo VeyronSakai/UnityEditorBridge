@@ -35,6 +35,18 @@ namespace UniCortex.Editor
                 SessionState.SetInt("UniCortex.Port", port);
             }
 
+            var router = new RequestRouter();
+
+            RegisterHandlers(router);
+
+            s_server = new HttpListenerServer(router, port);
+            s_server.Start();
+
+            ServerUrlFile.Write(port);
+        }
+
+        private static void RegisterHandlers(RequestRouter router)
+        {
             var pingUseCase = new PingUseCase(s_dispatcher);
             var pingHandler = new PingHandler(pingUseCase);
 
@@ -47,8 +59,8 @@ namespace UniCortex.Editor
             var pauseUseCase = new PauseUseCase(s_dispatcher);
             var pauseHandler = new PauseHandler(pauseUseCase);
 
-            var unpauseUseCase = new UnpauseUseCase(s_dispatcher);
-            var unpauseHandler = new UnpauseHandler(unpauseUseCase);
+            var resumeUseCase = new ResumeUseCase(s_dispatcher);
+            var resumeHandler = new ResumeHandler(resumeUseCase);
 
             var requestDomainReloadUseCase = new RequestDomainReloadUseCase(s_dispatcher);
             var requestDomainReloadHandler = new DomainReloadHandler(requestDomainReloadUseCase);
@@ -56,19 +68,13 @@ namespace UniCortex.Editor
             var getEditorStatusUseCase = new GetEditorStatusUseCase(s_dispatcher);
             var editorStatusHandler = new EditorStatusHandler(getEditorStatusUseCase);
 
-            var router = new RequestRouter();
             pingHandler.Register(router);
             playHandler.Register(router);
             stopHandler.Register(router);
             pauseHandler.Register(router);
-            unpauseHandler.Register(router);
+            resumeHandler.Register(router);
             requestDomainReloadHandler.Register(router);
             editorStatusHandler.Register(router);
-
-            s_server = new HttpListenerServer(router, port);
-            s_server.Start();
-
-            ServerUrlFile.Write(port);
         }
 
         private static int FindFreePort()
