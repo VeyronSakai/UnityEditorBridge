@@ -1,15 +1,16 @@
 using System.ComponentModel;
-using UniCortex.Editor.Domains.Models;
 using JetBrains.Annotations;
 using ModelContextProtocol.Server;
+using UniCortex.Editor.Domains.Models;
 
-namespace UniCortex.Mcp.Tools;
+namespace UniCortex.Mcp.Tools.Editor;
 
 [McpServerToolType, UsedImplicitly]
-public class RequestDomainReloadTool(IHttpClientFactory httpClientFactory)
+public class DomainReloadTool(IHttpClientFactory httpClientFactory)
 {
-    [McpServerTool(ReadOnly = false), Description("Request a domain reload (script recompilation) in the Unity Editor."), UsedImplicitly]
-    public async Task<string> RequestDomainReload(CancellationToken cancellationToken)
+    [McpServerTool(Name = "editor_domain_reload", ReadOnly = false),
+     Description("Request a domain reload (script recompilation) in the Unity Editor."), UsedImplicitly]
+    public async Task<string> DomainReload(CancellationToken cancellationToken)
     {
         var httpClient = httpClientFactory.CreateClient("UniCortex");
 

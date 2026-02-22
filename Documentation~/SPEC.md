@@ -117,7 +117,7 @@ Unity API はメインスレッドからのみ呼び出し可能。HttpListener 
 レスポンスは常に `application/json; charset=utf-8`。
 エラー時: HTTP ステータスコード + `{"error": "メッセージ"}`
 
-### GET `/ping`
+### GET `/editor/ping`
 
 サーバー疎通確認。**Unity Console に `pong` とログ出力**し、レスポンスを返す。
 
@@ -126,7 +126,7 @@ Unity API はメインスレッドからのみ呼び出し可能。HttpListener 
 {"status": "ok", "message": "pong"}
 ```
 
-### POST `/play`
+### POST `/editor/play`
 
 Play モードを開始する。`EditorApplication.isPlaying = true`
 
@@ -135,7 +135,7 @@ Play モードを開始する。`EditorApplication.isPlaying = true`
 {"success": true}
 ```
 
-### POST `/stop`
+### POST `/editor/stop`
 
 Play モードを停止する。`EditorApplication.isPlaying = false`
 
@@ -144,7 +144,7 @@ Play モードを停止する。`EditorApplication.isPlaying = false`
 {"success": true}
 ```
 
-### POST `/pause`
+### POST `/editor/pause`
 
 Play モードを一時停止する。`EditorApplication.isPaused = true`
 
@@ -153,7 +153,7 @@ Play モードを一時停止する。`EditorApplication.isPaused = true`
 {"success": true}
 ```
 
-### POST `/unpause`
+### POST `/editor/unpause`
 
 Play モードの一時停止を解除する。`EditorApplication.isPaused = false`
 
@@ -234,9 +234,12 @@ GameObject を作成する。
 
 | ツール | API | 説明 |
 |--------|-----|------|
-| `Ping` | GET `/ping` | 疎通確認 |
-| `Pause` | POST `/pause` | Play モード一時停止 |
-| `Unpause` | POST `/unpause` | Play モード一時停止解除 |
+| `editor_ping` | GET `/editor/ping` | 疎通確認 |
+| `editor_play` | POST `/editor/play` | Play モード開始 |
+| `editor_stop` | POST `/editor/stop` | Play モード停止 |
+| `editor_pause` | POST `/editor/pause` | Play モード一時停止 |
+| `editor_unpause` | POST `/editor/unpause` | Play モード一時停止解除 |
+| `editor_domain_reload` | POST `/editor/domain-reload` | ドメインリロード（スクリプト再コンパイル） |
 
 各ツールは `[McpServerToolType]` クラス内に `[McpServerTool]` メソッドとして定義。
 `IHttpClientFactory` をコンストラクタ DI で受け取り、Unity Editor HTTP サーバーにリクエストを送信する。
@@ -294,7 +297,7 @@ Unity プロジェクトのルートに `.mcp.json` を配置するだけで利�
 
 ```bash
 # curl で直接 API を呼ぶことも可能
-curl http://localhost:56780/ping
+curl http://localhost:56780/editor/ping
 curl -X POST http://localhost:56780/editor/play
 ```
 

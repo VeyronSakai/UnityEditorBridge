@@ -12,7 +12,7 @@ builder.Logging.AddConsole(options =>
     options.LogToStandardErrorThreshold = LogLevel.Trace;
 });
 
-builder.Services.AddTransient<DomainReloadRetryHandler>();
+builder.Services.AddTransient<HttpRequestHandler>();
 builder.Services.AddHttpClient("UniCortex", client =>
 {
     var baseUrl = Environment.GetEnvironmentVariable("UNICORTEX_URL") ?? "http://localhost:56780";
@@ -25,7 +25,7 @@ builder.Services.AddHttpClient("UniCortex", client =>
     }
 
     client.BaseAddress = baseUri;
-}).AddHttpMessageHandler<DomainReloadRetryHandler>();
+}).AddHttpMessageHandler<HttpRequestHandler>();
 
 builder.Services
     .AddMcpServer()

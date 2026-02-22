@@ -1,15 +1,16 @@
 using System.ComponentModel;
 using System.Text.Json;
-using UniCortex.Editor.Domains.Models;
 using JetBrains.Annotations;
 using ModelContextProtocol.Server;
+using UniCortex.Editor.Domains.Models;
 
-namespace UniCortex.Mcp.Tools;
+namespace UniCortex.Mcp.Tools.Editor;
 
 [McpServerToolType, UsedImplicitly]
 public class PingTool(IHttpClientFactory httpClientFactory)
 {
-    [McpServerTool(ReadOnly = true), Description("Check connectivity with the Unity Editor."), UsedImplicitly]
+    [McpServerTool(Name = "editor_ping", ReadOnly = true), Description("Check connectivity with the Unity Editor."),
+     UsedImplicitly]
     public async Task<string> Ping(CancellationToken cancellationToken)
     {
         var httpClient = httpClientFactory.CreateClient("UniCortex");

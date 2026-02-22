@@ -54,7 +54,7 @@ No pre-build or tool installation is required. The MCP server is built and start
 
 | Method | Path | Description |
 |--------|------|-------------|
-| GET | `/ping` | Health check |
+| GET | `/editor/ping` | Health check |
 | POST | `/editor/play` | Start Play mode |
 | POST | `/editor/stop` | Stop Play mode |
 | POST | `/gameobject/create` | Create a GameObject |
@@ -62,7 +62,7 @@ No pre-build or tool installation is required. The MCP server is built and start
 You can also call the API directly with curl:
 
 ```bash
-curl http://localhost:56780/ping
+curl http://localhost:56780/editor/ping
 curl -X POST http://localhost:56780/editor/play
 ```
 

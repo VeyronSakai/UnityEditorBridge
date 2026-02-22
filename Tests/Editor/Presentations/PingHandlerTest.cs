@@ -1,10 +1,10 @@
 using System.Threading;
 using UniCortex.Editor.Domains.Models;
 using UniCortex.Editor.Infrastructures;
-using UniCortex.Editor.Presentations;
 using UniCortex.Editor.Tests.TestDoubles;
 using UniCortex.Editor.UseCases;
 using NUnit.Framework;
+using UniCortex.Editor.Handlers.Editor;
 
 namespace UniCortex.Editor.Tests.Presentations
 {
@@ -21,11 +21,7 @@ namespace UniCortex.Editor.Tests.Presentations
             var router = new RequestRouter();
             handler.Register(router);
 
-            var context = new FakeRequestContext
-            {
-                HttpMethod = "GET",
-                Path = ApiRoutes.Ping
-            };
+            var context = new FakeRequestContext { HttpMethod = "GET", Path = ApiRoutes.Ping };
 
             router.HandleRequestAsync(context, CancellationToken.None).GetAwaiter().GetResult();
 

@@ -1,7 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using UniCortex.Editor.Domains.Interfaces;
-using UnityEditor;
 using UnityEditor.Compilation;
 using UnityEngine;
 

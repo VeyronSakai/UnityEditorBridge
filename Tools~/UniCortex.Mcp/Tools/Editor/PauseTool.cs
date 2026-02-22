@@ -1,24 +1,20 @@
 using System.ComponentModel;
 using System.Text.Json;
-using UniCortex.Editor.Domains.Models;
 using JetBrains.Annotations;
 using ModelContextProtocol.Server;
-using UniCortex.Mcp.UseCases;
+using UniCortex.Editor.Domains.Models;
 
-namespace UniCortex.Mcp.Tools;
+namespace UniCortex.Mcp.Tools.Editor;
 
 [McpServerToolType, UsedImplicitly]
-public class PlayTool(IHttpClientFactory httpClientFactory)
+public class PauseTool(IHttpClientFactory httpClientFactory)
 {
-    [McpServerTool(ReadOnly = false), Description("Start Play Mode in the Unity Editor."), UsedImplicitly]
-    public async Task<string> Play(CancellationToken cancellationToken)
+    [McpServerTool(Name = "editor_pause", ReadOnly = false), Description("Pause the Unity Editor."), UsedImplicitly]
+    public async Task<string> Pause(CancellationToken cancellationToken)
     {
         var httpClient = httpClientFactory.CreateClient("UniCortex");
         var jsonOptions = new JsonSerializerOptions { IncludeFields = true };
-
-        await DomainReloadUseCase.ReloadAsync(httpClient, cancellationToken);
-
-        var response = await httpClient.PostAsync(ApiRoutes.Play, null, cancellationToken);
+        var response = await httpClient.PostAsync(ApiRoutes.Pause, null, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         while (true)
@@ -27,9 +23,9 @@ public class PlayTool(IHttpClientFactory httpClientFactory)
             statusResponse.EnsureSuccessStatusCode();
             var statusJson = await statusResponse.Content.ReadAsStringAsync(cancellationToken);
             var status = JsonSerializer.Deserialize<EditorStatusResponse>(statusJson, jsonOptions)!;
-            if (status.isPlaying)
+            if (status.isPaused)
             {
-                return "Play mode started successfully.";
+                return "Paused successfully.";
             }
         }
     }

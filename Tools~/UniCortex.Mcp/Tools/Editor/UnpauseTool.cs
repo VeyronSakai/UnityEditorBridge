@@ -1,15 +1,15 @@
 using System.ComponentModel;
 using System.Text.Json;
-using UniCortex.Editor.Domains.Models;
 using JetBrains.Annotations;
 using ModelContextProtocol.Server;
+using UniCortex.Editor.Domains.Models;
 
-namespace UniCortex.Mcp.Tools;
+namespace UniCortex.Mcp.Tools.Editor;
 
 [McpServerToolType, UsedImplicitly]
 public class UnpauseTool(IHttpClientFactory httpClientFactory)
 {
-    [McpServerTool(ReadOnly = false), Description("Unpause the Unity Editor."), UsedImplicitly]
+    [McpServerTool(Name = "editor_unpause", ReadOnly = false), Description("Unpause the Unity Editor."), UsedImplicitly]
     public async Task<string> Unpause(CancellationToken cancellationToken)
     {
         var httpClient = httpClientFactory.CreateClient("UniCortex");

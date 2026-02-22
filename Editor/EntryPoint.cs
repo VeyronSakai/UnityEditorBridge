@@ -1,5 +1,5 @@
+using UniCortex.Editor.Handlers.Editor;
 using UniCortex.Editor.Infrastructures;
-using UniCortex.Editor.Presentations;
 using UniCortex.Editor.Settings;
 using UniCortex.Editor.UseCases;
 using UnityEditor;
@@ -51,7 +51,7 @@ namespace UniCortex.Editor
             var unpauseHandler = new UnpauseHandler(unpauseUseCase);
 
             var requestDomainReloadUseCase = new RequestDomainReloadUseCase(s_dispatcher);
-            var requestDomainReloadHandler = new RequestDomainReloadHandler(requestDomainReloadUseCase);
+            var requestDomainReloadHandler = new DomainReloadHandler(requestDomainReloadUseCase);
 
             var getEditorStatusUseCase = new GetEditorStatusUseCase(s_dispatcher);
             var editorStatusHandler = new EditorStatusHandler(getEditorStatusUseCase);

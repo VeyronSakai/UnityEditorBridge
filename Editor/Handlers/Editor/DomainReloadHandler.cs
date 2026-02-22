@@ -5,13 +5,13 @@ using UniCortex.Editor.Domains.Models;
 using UniCortex.Editor.UseCases;
 using UnityEngine;
 
-namespace UniCortex.Editor.Presentations
+namespace UniCortex.Editor.Handlers.Editor
 {
-    internal sealed class RequestDomainReloadHandler
+    internal sealed class DomainReloadHandler
     {
         private readonly RequestDomainReloadUseCase _useCase;
 
-        public RequestDomainReloadHandler(RequestDomainReloadUseCase useCase)
+        public DomainReloadHandler(RequestDomainReloadUseCase useCase)
         {
             _useCase = useCase;
         }
