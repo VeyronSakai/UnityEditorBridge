@@ -29,7 +29,9 @@ public class PauseTool(IHttpClientFactory httpClientFactory, IUnityServerUrlProv
                 var statusJson = await statusResponse.Content.ReadAsStringAsync(cancellationToken);
                 var status = JsonSerializer.Deserialize<EditorStatusResponse>(statusJson, jsonOptions)!;
                 if (status.isPaused)
+                {
                     return new CallToolResult { Content = [new TextContentBlock { Text = "Paused successfully." }] };
+                }
             }
         }
         catch (Exception ex)

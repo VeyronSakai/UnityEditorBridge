@@ -31,7 +31,9 @@ public class StopTool(IHttpClientFactory httpClientFactory, IUnityServerUrlProvi
                 var statusJson = await statusResponse.Content.ReadAsStringAsync(cancellationToken);
                 var status = JsonSerializer.Deserialize<EditorStatusResponse>(statusJson, jsonOptions)!;
                 if (!status.isPlaying)
+                {
                     return new CallToolResult { Content = [new TextContentBlock { Text = "Play mode stopped successfully." }] };
+                }
             }
         }
         catch (Exception ex)
