@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Text.Json;
 using JetBrains.Annotations;
+using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
 using UniCortex.Editor.Domains.Models;
 using UniCortex.Mcp.Domains.Interfaces;
@@ -12,27 +13,32 @@ namespace UniCortex.Mcp.Tools.Editor;
 public class PlayTool(IHttpClientFactory httpClientFactory, IUnityServerUrlProvider urlProvider)
 {
     [McpServerTool(Name = "editor_play", ReadOnly = false), Description("Start Play Mode in the Unity Editor."), UsedImplicitly]
-    public async Task<string> Play(CancellationToken cancellationToken)
+    public async Task<CallToolResult> Play(CancellationToken cancellationToken)
     {
-        var httpClient = httpClientFactory.CreateClient("UniCortex");
-        var baseUrl = urlProvider.GetUrl();
-        var jsonOptions = new JsonSerializerOptions { IncludeFields = true };
-
-        await DomainReloadUseCase.ReloadAsync(httpClient, baseUrl, cancellationToken);
-
-        var response = await httpClient.PostAsync(baseUrl + ApiRoutes.Play, null, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        while (true)
+        try
         {
-            var statusResponse = await httpClient.GetAsync(baseUrl + ApiRoutes.Status, cancellationToken);
-            statusResponse.EnsureSuccessStatusCode();
-            var statusJson = await statusResponse.Content.ReadAsStringAsync(cancellationToken);
-            var status = JsonSerializer.Deserialize<EditorStatusResponse>(statusJson, jsonOptions)!;
-            if (status.isPlaying)
+            var httpClient = httpClientFactory.CreateClient("UniCortex");
+            var baseUrl = urlProvider.GetUrl();
+            var jsonOptions = new JsonSerializerOptions { IncludeFields = true };
+
+            await DomainReloadUseCase.ReloadAsync(httpClient, baseUrl, cancellationToken);
+
+            var response = await httpClient.PostAsync(baseUrl + ApiRoutes.Play, null, cancellationToken);
+            response.EnsureSuccessStatusCode();
+
+            while (true)
             {
-                return "Play mode started successfully.";
+                var statusResponse = await httpClient.GetAsync(baseUrl + ApiRoutes.Status, cancellationToken);
+                statusResponse.EnsureSuccessStatusCode();
+                var statusJson = await statusResponse.Content.ReadAsStringAsync(cancellationToken);
+                var status = JsonSerializer.Deserialize<EditorStatusResponse>(statusJson, jsonOptions)!;
+                if (status.isPlaying)
+                    return new CallToolResult { Content = [new TextContentBlock { Text = "Play mode started successfully." }] };
             }
+        }
+        catch (Exception ex)
+        {
+            return new CallToolResult { IsError = true, Content = [new TextContentBlock { Text = ex.ToString() }] };
         }
     }
 }
