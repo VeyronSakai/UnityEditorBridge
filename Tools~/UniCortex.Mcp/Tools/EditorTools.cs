@@ -22,8 +22,12 @@ public class EditorTools(IHttpClientFactory httpClientFactory, IUnityServerUrlPr
         try
         {
             var baseUrl = urlProvider.GetUrl();
-            var response = await _httpClient.GetAsync(baseUrl + ApiRoutes.Ping, cancellationToken);
+
+            await DomainReloadUseCase.ReloadAsync(_httpClient, baseUrl, cancellationToken);
+
+            var response = await _httpClient.GetAsync($"{baseUrl}{ApiRoutes.Ping}", cancellationToken);
             await response.EnsureSuccessWithErrorBodyAsync(cancellationToken);
+
             var json = await response.Content.ReadAsStringAsync(cancellationToken);
             var ping = JsonSerializer.Deserialize<PingResponse>(json, _jsonOptions)!;
             return new CallToolResult { Content = [new TextContentBlock { Text = ping.message }] };
