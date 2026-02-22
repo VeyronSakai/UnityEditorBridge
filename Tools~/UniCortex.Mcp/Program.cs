@@ -1,7 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using UniCortex.Mcp;
+using UniCortex.Mcp.Infrastructures;
+using UniCortex.Mcp.UseCases;
 
 var builder = Host.CreateApplicationBuilder(args);
 

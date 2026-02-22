@@ -23,12 +23,9 @@ namespace UniCortex.Editor.Presentations
 
         private async Task HandlePlayAsync(IRequestContext context, CancellationToken cancellationToken)
         {
-            // Write the response before executing the use case.
-            // Setting isPlaying = true triggers a domain reload, which can invalidate
-            // the HTTP context before WriteResponseAsync is called.
+            await _useCase.ExecuteAsync(cancellationToken);
             var json = JsonUtility.ToJson(new PlayResponse(success: true));
             await context.WriteResponseAsync(200, json);
-            await _useCase.ExecuteAsync(cancellationToken);
         }
     }
 }

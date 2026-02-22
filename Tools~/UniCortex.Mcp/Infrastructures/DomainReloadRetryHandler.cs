@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace UniCortex.Mcp;
+namespace UniCortex.Mcp.Infrastructures;
 
 public class DomainReloadRetryHandler(ILogger<DomainReloadRetryHandler> logger) : DelegatingHandler
 {
@@ -17,16 +17,11 @@ public class DomainReloadRetryHandler(ILogger<DomainReloadRetryHandler> logger) 
             try
             {
                 var response = await base.SendAsync(request, cancellationToken);
+
+                // If the domain is reloading, a response with Content-Length 0 may be returned, which will also be considered a failure and will be retried.
                 if (response.Content.Headers.ContentLength is null or 0)
                 {
-                    if (!logged)
-                    {
-                        logger.LogInformation(
-                            "Unity Editor is not responding. Waiting for domain reload to complete...");
-                        logged = true;
-                    }
-
-                    continue;
+                    throw new HttpRequestException();
                 }
 
                 if (logged)

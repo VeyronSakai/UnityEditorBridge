@@ -1,8 +1,8 @@
 using UniCortex.Editor.Domains.Models;
 
-namespace UniCortex.Mcp.Tools;
+namespace UniCortex.Mcp.UseCases;
 
-internal static class DomainReloadHelper
+internal static class DomainReloadUseCase
 {
     internal static async Task ReloadAsync(HttpClient httpClient, CancellationToken cancellationToken)
     {

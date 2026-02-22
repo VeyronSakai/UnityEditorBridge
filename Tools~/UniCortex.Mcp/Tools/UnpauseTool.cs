@@ -9,14 +9,11 @@ namespace UniCortex.Mcp.Tools;
 [McpServerToolType, UsedImplicitly]
 public class UnpauseTool(IHttpClientFactory httpClientFactory)
 {
-    [McpServerTool(ReadOnly = false), Description("Unpause Play Mode in the Unity Editor."), UsedImplicitly]
+    [McpServerTool(ReadOnly = false), Description("Unpause the Unity Editor."), UsedImplicitly]
     public async Task<string> Unpause(CancellationToken cancellationToken)
     {
         var httpClient = httpClientFactory.CreateClient("UniCortex");
         var jsonOptions = new JsonSerializerOptions { IncludeFields = true };
-
-        await DomainReloadHelper.ReloadAsync(httpClient, cancellationToken);
-
         var response = await httpClient.PostAsync(ApiRoutes.Unpause, null, cancellationToken);
         response.EnsureSuccessStatusCode();
 
@@ -28,7 +25,7 @@ public class UnpauseTool(IHttpClientFactory httpClientFactory)
             var status = JsonSerializer.Deserialize<EditorStatusResponse>(statusJson, jsonOptions)!;
             if (!status.isPaused)
             {
-                return "Play mode unpaused successfully.";
+                return "Unpaused successfully.";
             }
         }
     }

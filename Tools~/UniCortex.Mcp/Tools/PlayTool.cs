@@ -3,6 +3,7 @@ using System.Text.Json;
 using UniCortex.Editor.Domains.Models;
 using JetBrains.Annotations;
 using ModelContextProtocol.Server;
+using UniCortex.Mcp.UseCases;
 
 namespace UniCortex.Mcp.Tools;
 
@@ -15,7 +16,7 @@ public class PlayTool(IHttpClientFactory httpClientFactory)
         var httpClient = httpClientFactory.CreateClient("UniCortex");
         var jsonOptions = new JsonSerializerOptions { IncludeFields = true };
 
-        await DomainReloadHelper.ReloadAsync(httpClient, cancellationToken);
+        await DomainReloadUseCase.ReloadAsync(httpClient, cancellationToken);
 
         var response = await httpClient.PostAsync(ApiRoutes.Play, null, cancellationToken);
         response.EnsureSuccessStatusCode();

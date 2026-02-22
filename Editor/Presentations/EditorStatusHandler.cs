@@ -25,7 +25,6 @@ namespace UniCortex.Editor.Presentations
         {
             var result = await _useCase.ExecuteAsync(cancellationToken);
             var json = JsonUtility.ToJson(result);
-            Debug.Log(json);
             await context.WriteResponseAsync(200, json);
         }
     }
