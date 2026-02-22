@@ -272,7 +272,7 @@ Unity プロジェクトのルートに `.mcp.json` を配置するだけで利�
     "Unity": {
       "type": "stdio",
       "command": "dotnet",
-      "args": ["run", "--project", "${UNICORTEX_PROJECT_PATH}/Library/PackageCache/com.veyron-sakai.uni-cortex@0.1.0/Tools~/UniCortex.Mcp/"],
+      "args": ["run", "--project", "/path/to/your/unity/project/Library/PackageCache/com.veyron-sakai.uni-cortex@0.1.0/Tools~/UniCortex.Mcp/"],
       "env": {
         "UNICORTEX_PROJECT_PATH": "/path/to/your/unity/project"
       }
@@ -281,7 +281,7 @@ Unity プロジェクトのルートに `.mcp.json` を配置するだけで利�
 }
 ```
 
-`UNICORTEX_PROJECT_PATH` を Unity プロジェクトの絶対パスに設定する。`--project` の引数と URL ファイルの探索パスの両方に使われる（env 変数展開は MCP クライアントの対応による）。
+`/path/to/your/unity/project` を Unity プロジェクトの絶対パスに置き換える。`args` の `--project` と `UNICORTEX_PROJECT_PATH` の両方に同じパスを設定する必要がある（`args` 内での環境変数展開は MCP クライアントが対応していないため）。
 
 `dotnet run` が初回実行時に自動でビルドし、MCP サーバーを起動する。
 

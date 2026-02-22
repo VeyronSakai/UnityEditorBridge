@@ -28,7 +28,10 @@ Unity Editor を外部から REST API + MCP で操作するツールキット。
       "Unity": {
         "type": "stdio",
         "command": "dotnet",
-        "args": ["run", "--project", "Library/PackageCache/com.veyron-sakai.uni-cortex@0.1.0/Tools~/UniCortex.Mcp/"]
+        "args": ["run", "--project", "/path/to/your/unity/project/Library/PackageCache/com.veyron-sakai.uni-cortex@0.1.0/Tools~/UniCortex.Mcp/"],
+        "env": {
+          "UNICORTEX_PROJECT_PATH": "/path/to/your/unity/project"
+        }
       }
     }
   }

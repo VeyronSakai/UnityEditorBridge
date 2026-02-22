@@ -42,7 +42,7 @@ Add the following to `.mcp.json` in the Unity project root:
     "Unity": {
       "type": "stdio",
       "command": "dotnet",
-      "args": ["run", "--project", "${UNICORTEX_PROJECT_PATH}/Library/PackageCache/com.veyron-sakai.uni-cortex@0.1.0/Tools~/UniCortex.Mcp/"],
+      "args": ["run", "--project", "/path/to/your/unity/project/Library/PackageCache/com.veyron-sakai.uni-cortex@0.1.0/Tools~/UniCortex.Mcp/"],
       "env": {
         "UNICORTEX_PROJECT_PATH": "/path/to/your/unity/project"
       }
@@ -51,7 +51,7 @@ Add the following to `.mcp.json` in the Unity project root:
 }
 ```
 
-Set `UNICORTEX_PROJECT_PATH` to the absolute path of your Unity project. The MCP server reads the port number from `Library/UniCortex/config.json` (written automatically when Unity Editor starts) and connects to the HTTP server.
+Replace `/path/to/your/unity/project` with the absolute path of your Unity project (set it in both `args` and `UNICORTEX_PROJECT_PATH`). The MCP server reads the port number from `Library/UniCortex/config.json` (written automatically when Unity Editor starts) and connects to the HTTP server.
 
 No pre-build or tool installation is required. The MCP server is built and started automatically via `dotnet run`.
 
@@ -63,7 +63,7 @@ Alternatively, you can specify the URL directly via the `UNICORTEX_URL` environm
     "Unity": {
       "type": "stdio",
       "command": "dotnet",
-      "args": ["run", "--project", "Library/PackageCache/com.veyron-sakai.uni-cortex@0.1.0/Tools~/UniCortex.Mcp/"],
+      "args": ["run", "--project", "/path/to/your/unity/project/Library/PackageCache/com.veyron-sakai.uni-cortex@0.1.0/Tools~/UniCortex.Mcp/"],
       "env": {
         "UNICORTEX_URL": "http://localhost:12345"
       }
